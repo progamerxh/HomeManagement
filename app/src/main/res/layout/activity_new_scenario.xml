@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_grey"
+    android:orientation="vertical"
+    tools:context=".Activity.NewScenarioActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_grey">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <EditText
+        android:id="@+id/txtScenarioName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/round_corner_background"
+        android:hint="Scenario name"
+        android:inputType="textFilter"
+        android:imeOptions="actionDone"
+        android:padding="10dp"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textColorHighlight="@color/dark_grey"
+        android:textCursorDrawable="@null"
+        android:textSize="22sp" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/roomPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+>
+
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/pager_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            style="@style/viewPagerTitleStrip"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
+    </android.support.v4.view.ViewPager>
+
+
+</LinearLayout>
