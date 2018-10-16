@@ -38,6 +38,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     private ArrayList<ScenarioItem> scenarioItems;
     private ArrayList<Notification> notifications;
     private int[] colors = {R.color.pastel_1, R.color.pastel_2, R.color.pastel_3, R.color.pastel_4, R.color.light_grey, R.color.light_blue, R.color.light_green, R.color.light_red};
+    private String[] sockets = {"Wifi","TV","Fan", "Xaomi"};
     private Context context;
     private int mtype;
 
@@ -65,8 +66,10 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         notifications.add(0, new Notification(false));
         notifications.add(0, new Notification(false));
         notifications.add(0, new Notification(false));
-        devices.add("LIGHT");
-        devices.add("CLIMATE");
+        devices.add("Light");
+        devices.add("Climate");
+        devices.add("Electricity");
+        devices.add("Wifi");
         devices.add("");
         this.context = context;
     }
@@ -105,6 +108,12 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                         .inflate(R.layout.item_light_color, parent, false);
                 viewHolder = new ColorViewHolder(view);
                 break;
+            case 6:
+                //Match_parent width
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_electricity_socket, parent, false);
+                viewHolder = new SocketViewHolder(view);
+                break;
             case -1:
             case -2:
                 view = View.inflate(parent.getContext(), R.layout.add_item, null);
@@ -120,6 +129,10 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         switch (mtype) {
             case 0:
             case 1:
+                if (position == devices.size() - 1)
+                    return;
+                DeviceViewHolder deviceViewHolder = (DeviceViewHolder) holder;
+                deviceViewHolder.txtDeviceName.setText(devices.get(position));
                 break;
             case 2:
                 if (position == scenarioItems.size() - 1)
@@ -155,6 +168,18 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                     colorViewHolder.imageView.getBackground().setColorFilter(context.getResources().getColor(colors[position]),
                             PorterDuff.Mode.MULTIPLY);
                 break;
+            case 6:
+                final SocketViewHolder socketViewHolder = (SocketViewHolder) holder;
+
+                socketViewHolder.txtSocketName.setText(sockets[position]);
+                socketViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        socketViewHolder.imageView.setSelected(!socketViewHolder.imageView.isSelected());
+                    }
+                });
+
+                break;
             default:
                 break;
         }
@@ -175,6 +200,8 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 return notifications.size();
             case 5:
                 return colors.length + 1;
+            case 6:
+                return sockets.length;
             default:
                 return 0;
         }
@@ -242,8 +269,11 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     }
 
     class DeviceViewHolder extends MyViewHolder {
+        private TextView txtDeviceName;
+
         public DeviceViewHolder(View itemView) {
             super(itemView);
+            txtDeviceName = (TextView) itemView.findViewById(R.id.txtDeviceName);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -337,6 +367,17 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         public ColorViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imgColor);
+        }
+    }
+
+    class SocketViewHolder extends MyViewHolder {
+        private ImageView imageView;
+        private TextView txtSocketName;
+
+        public SocketViewHolder(View itemView) {
+            super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.imgSocket);
+            txtSocketName = (TextView) itemView.findViewById(R.id.txtSocketName);
         }
     }
 }

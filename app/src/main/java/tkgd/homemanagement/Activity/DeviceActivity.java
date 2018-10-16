@@ -16,6 +16,19 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import tkgd.homemanagement.Adapter.MultiAdapter;
 import tkgd.homemanagement.R;
 import tkgd.homemanagement.Utility.ItemOffsetDecoration;
@@ -33,13 +46,21 @@ public class DeviceActivity extends AppCompatActivity {
             deviceId = extras.getInt("DEVICE_ID");
         }
         switch (deviceType) {
-            case "LIGHT":
+            case "Light":
                 setContentView(R.layout.device_light);
                 LightDeviceInitial();
                 break;
-            case "CLIMATE":
+            case "Climate":
                 setContentView(R.layout.device_climate);
                 ClimateDeviceInitial();
+                break;
+            case "Electricity":
+                setContentView(R.layout.device_electricity);
+                ElectricityDeviceInitial();
+                break;
+            case "Wifi":
+                setContentView(R.layout.device_wifi);
+                WifiDeviceInitial();
                 break;
             default:
                 break;
@@ -47,14 +68,143 @@ public class DeviceActivity extends AppCompatActivity {
 
     }
 
-    private void LightDeviceInitial(){
+    private void WifiDeviceInitial() {
+        LineChart chartUsage;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(deviceType);
+        toolbar.setTitleTextColor(Color.WHITE);
+
+        chartUsage = (LineChart) findViewById(R.id.chartUsage);
+        int downloads[][] = {{1,22},{2,35},{3,21},{4,37},{5,42},{6,11},{7,23},{8,47}};
+        int uploads[][] = {{1,33},{2,21},{3,41},{4,27},{5,33},{6,25},{7,22},{8,37}};
+        List<Entry> entries1 = new ArrayList<Entry>();
+        List<Entry> entries2 = new ArrayList<Entry>();
+        for (int download[] : downloads)
+        {
+            entries1.add(new Entry(download[0], download[1]));
+        }
+        for (int upload[] : uploads)
+        {
+            entries2.add(new Entry(upload[0], upload[1]));
+        }
+        LineDataSet downloadSet = new LineDataSet(entries1,"Download");
+        downloadSet.setColor(Color.GREEN);
+        downloadSet.setDrawCircles(false);
+        downloadSet.setDrawCircleHole(false);
+        downloadSet.setDrawValues(false);
+        downloadSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
+        LineDataSet uploadSet = new LineDataSet(entries2,"Upload");
+        uploadSet.setColor(Color.WHITE);
+        uploadSet.setDrawCircles(false);
+        uploadSet.setDrawCircleHole(false);
+        uploadSet.setDrawValues(false);
+        uploadSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
+        LineData lineData = new LineData();
+        lineData.addDataSet(downloadSet);
+        lineData.addDataSet(uploadSet);
+        chartUsage.setData(lineData);
+        XAxis xAxis = chartUsage.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(14);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setDrawAxisLine(true);
+        YAxis yAxisRight = chartUsage.getAxisRight();
+        yAxisRight.setEnabled(false);
+        YAxis yAxisLeft = chartUsage.getAxisLeft();
+        yAxisLeft.setAxisMinValue(0);
+        yAxisLeft.setSpaceTop(30);
+        yAxisLeft.setTextColor(Color.WHITE);
+        yAxisLeft.setTextSize(14);
+        yAxisLeft.setDrawGridLines(false);
+// set a custom value formatter
+        Description description = new Description();
+        description.setText("Down/Up load speed");
+        description.setTextColor(Color.WHITE);
+        description.setTextSize(12);
+        chartUsage.setNoDataText("No electricity consumed today!");
+        chartUsage.setDescription(description);
+        chartUsage.setHighlightPerTapEnabled(false);
+
+        chartUsage.invalidate(); // refresh
+    }
+
+    private void ElectricityDeviceInitial() {
+        RecyclerView socketsrecyler;
+        LineChart chartUsage;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(deviceType);
+        toolbar.setTitleTextColor(Color.WHITE);
+
+        socketsrecyler = (RecyclerView) findViewById(R.id.sockets_recycleview);
+        LinearLayoutManager layoutManagerScenarios = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        socketsrecyler.setItemAnimator(new DefaultItemAnimator());
+        socketsrecyler.setLayoutManager(layoutManagerScenarios);
+
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
+        MultiAdapter socketadapter = new MultiAdapter(getApplicationContext(), 6);
+        socketsrecyler.setAdapter(socketadapter);
+        socketsrecyler.addItemDecoration(itemDecoration);
+
+        chartUsage = (LineChart) findViewById(R.id.chartUsage);
+        int usages[][] = {{1,22},{2,35},{3,21},{4,37},{5,42},{6,11},{7,23},{8,47}};
+        List<Entry> entries = new ArrayList<Entry>();
+        for (int hourusage[] : usages)
+        {
+            entries.add(new Entry(hourusage[0], hourusage[1]));
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries,"Wh");
+        dataSet.setColor(Color.WHITE);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSet.setCircleColor(getResources().getColor(R.color.light_green));
+        dataSet.setCircleRadius(5f);
+        dataSet.setValueTextSize(10f);
+        LineData lineData = new LineData(dataSet);
+        chartUsage.setData(lineData);
+        XAxis xAxis = chartUsage.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(14);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setDrawAxisLine(true);
+        YAxis yAxisRight = chartUsage.getAxisRight();
+        yAxisRight.setEnabled(false);
+        YAxis yAxisLeft = chartUsage.getAxisLeft();
+        yAxisLeft.setAxisMinValue(0);
+        yAxisLeft.setSpaceTop(30);
+        yAxisLeft.setTextColor(Color.WHITE);
+        yAxisLeft.setTextSize(14);
+        yAxisLeft.setDrawGridLines(false);
+// set a custom value formatter
+        Description description = new Description();
+        description.setText("Kilowatts hours");
+        description.setTextColor(Color.WHITE);
+        description.setTextSize(12);
+        chartUsage.setNoDataText("No electricity consumed today!");
+        chartUsage.setDescription(description);
+        chartUsage.setHighlightPerTapEnabled(false);
+
+        chartUsage.invalidate(); // refresh
+    }
+
+    private void LightDeviceInitial() {
         RecyclerView lightsrecycler, colorrecycler;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Lighting");
+        actionBar.setTitle(deviceType);
         toolbar.setTitleTextColor(Color.WHITE);
 
         lightsrecycler = (RecyclerView) findViewById(R.id.lights_recycleview);
@@ -77,13 +227,13 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     private void ClimateDeviceInitial() {
-         RecyclerView moderecycler;
+        RecyclerView moderecycler;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Climate");
+        actionBar.setTitle(deviceType);
         toolbar.setTitleTextColor(Color.WHITE);
 
         moderecycler = (RecyclerView) findViewById(R.id.mode_recycleview);
@@ -92,8 +242,8 @@ public class DeviceActivity extends AppCompatActivity {
         moderecycler.setLayoutManager(layoutManagerScenarios);
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter lightsadapter = new MultiAdapter(getApplicationContext(), 2);
-        moderecycler.setAdapter(lightsadapter);
+        MultiAdapter modeadapter = new MultiAdapter(getApplicationContext(), 2);
+        moderecycler.setAdapter(modeadapter);
         moderecycler.addItemDecoration(itemDecoration);
 
     }
@@ -113,6 +263,7 @@ public class DeviceActivity extends AppCompatActivity {
         });
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
