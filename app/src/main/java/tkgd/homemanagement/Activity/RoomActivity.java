@@ -2,9 +2,9 @@ package tkgd.homemanagement.Activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -16,10 +16,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,14 +27,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import tkgd.homemanagement.Model.Room;
 import tkgd.homemanagement.Adapter.MultiAdapter;
-import tkgd.homemanagement.R;
 import tkgd.homemanagement.Adapter.PageAdapter;
+import tkgd.homemanagement.Model.Room;
+import tkgd.homemanagement.R;
 import tkgd.homemanagement.RoomPhotoFragment;
 import tkgd.homemanagement.Utility.ExpandingViewPagerTransformer;
 import tkgd.homemanagement.Utility.FixAppBarLayoutBehavior;
 import tkgd.homemanagement.Utility.ItemOffsetDecoration;
+
+import static tkgd.homemanagement.Utility.DeviceSetting.differentDensityAndScreenSize;
 
 public class RoomActivity extends AppCompatActivity {
     private Button devices, manage;
@@ -91,7 +93,7 @@ public class RoomActivity extends AppCompatActivity {
         deviceReyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 0);
+        MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 1);
         deviceReyclerView.setAdapter(multiAdapter);
         deviceReyclerView.addItemDecoration(itemDecoration);
         Bundle extras = getIntent().getExtras();
@@ -104,23 +106,32 @@ public class RoomActivity extends AppCompatActivity {
             rooms.add(new Room(extras.getString("ROOM_NAME"), extras.getInt("ROOM_PHOTOID")));
         }
         pager = (ViewPager) findViewById(R.id.viewpager);
-        differentDensityAndScreenSize(getApplicationContext());
+        str_device = differentDensityAndScreenSize(getApplicationContext());
         List<Fragment> fragments = getFragments();
         pager.setAdapter(obj_adapter);
         pager.setClipToPadding(false);
-
-        if (str_device.equals("normal-hdpi")) {
-            pager.setPadding(80, 0, 80, 0);
-        } else if (str_device.equals("normal-mdpi")) {
-            pager.setPadding(80, 0, 80, 0);
-        } else if (str_device.equals("normal-xhdpi")) {
-            pager.setPadding(80, 0, 80, 0);
-        } else if (str_device.equals("normal-xxhdpi")) {
-            pager.setPadding(90, 0, 90, 0);
-        } else if (str_device.equals("normal-xxxhdpi")) {
-            pager.setPadding(90, 0, 90, 0);
-        } else if (str_device.equals("normal-unknown")) {
-            pager.setPadding(80, 0, 80, 0);
+        switch (str_device) {
+            case "normal-hdpi":
+                pager.setPadding(80, 0, 80, 0);
+                break;
+            case "normal-mdpi":
+                pager.setPadding(80, 0, 80, 0);
+                break;
+            case "normal-xhdpi":
+                pager.setPadding(80, 0, 80, 0);
+                break;
+            case "normal-xxhdpi":
+                pager.setPadding(90, 0, 80, 0);
+                break;
+            case "normal-xxxhdpi":
+                pager.setPadding(90, 0, 80, 0);
+                break;
+            case "normal-unknown":
+                pager.setPadding(80, 0, 80, 0);
+                break;
+            default:
+                pager.setPadding(80, 0, 80, 0);
+                break;
         }
         pager.setPageTransformer(true, new ExpandingViewPagerTransformer());
         pager.setAdapter(new PageAdapter(getSupportFragmentManager(), fragments, 0));
@@ -140,11 +151,29 @@ public class RoomActivity extends AppCompatActivity {
                 Toast.makeText(RoomActivity.this, "Page selected: " + position, Toast.LENGTH_SHORT).show();
                 if (position == rooms.size()) {
                     collapsingToolbarLayout.setTitle(" New room");
+                    deviceReyclerView.setAdapter(new RecyclerView.Adapter() {
+                        @NonNull
+                        @Override
+                        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                            return null;
+                        }
+
+                        @Override
+                        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+                        }
+
+                        @Override
+                        public int getItemCount() {
+                            return 0;
+                        }
+                    });
                 } else {
                     collapsingToolbarLayout.setTitle(rooms.get(position).getName());
+                    MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 1);
+                    deviceReyclerView.setAdapter(multiAdapter);
                 }
-                MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, position % 2);
-                deviceReyclerView.setAdapter(multiAdapter);
+
             }
 
             @Override
@@ -199,192 +228,6 @@ public class RoomActivity extends AppCompatActivity {
         return fList;
     }
 
-    public int differentDensityAndScreenSize(Context context) {
-        int value = 20;
-        String str = "";
-        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_SMALL) {
-            switch (context.getResources().getDisplayMetrics().densityDpi) {
-                case DisplayMetrics.DENSITY_LOW:
-                    str = "small-ldpi";
-                    // Log.e("small 1","small-ldpi");
-                    value = 20;
-                    break;
-                case DisplayMetrics.DENSITY_MEDIUM:
-                    str = "small-mdpi";
-                    // Log.e("small 1","small-mdpi");
-                    value = 20;
-                    break;
-                case DisplayMetrics.DENSITY_HIGH:
-                    str = "small-hdpi";
-                    // Log.e("small 1","small-hdpi");
-                    value = 20;
-                    break;
-                case DisplayMetrics.DENSITY_XHIGH:
-                    str = "small-xhdpi";
-                    // Log.e("small 1","small-xhdpi");
-                    value = 20;
-                    break;
-                case DisplayMetrics.DENSITY_XXHIGH:
-                    str = "small-xxhdpi";
-                    // Log.e("small 1","small-xxhdpi");
-                    value = 20;
-                    break;
-                case DisplayMetrics.DENSITY_XXXHIGH:
-                    str = "small-xxxhdpi";
-                    //Log.e("small 1","small-xxxhdpi");
-                    value = 20;
-                    break;
-                case DisplayMetrics.DENSITY_TV:
-                    str = "small-tvdpi";
-                    // Log.e("small 1","small-tvdpi");
-                    value = 20;
-                    break;
-                default:
-                    str = "small-unknown";
-                    value = 20;
-                    break;
-            }
-
-        } else if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
-            switch (context.getResources().getDisplayMetrics().densityDpi) {
-                case DisplayMetrics.DENSITY_LOW:
-                    str = "normal-ldpi";
-                    // Log.e("normal-ldpi 1","normal-ldpi");
-                    str_device = "normal-ldpi";
-                    value = 82;
-                    break;
-                case DisplayMetrics.DENSITY_MEDIUM:
-                    // Log.e("normal-mdpi 1","normal-mdpi");
-                    str = "normal-mdpi";
-                    value = 82;
-                    str_device = "normal-mdpi";
-                    break;
-                case DisplayMetrics.DENSITY_HIGH:
-                    // Log.e("normal-hdpi 1","normal-hdpi");
-                    str = "normal-hdpi";
-                    str_device = "normal-hdpi";
-                    value = 82;
-                    break;
-                case DisplayMetrics.DENSITY_XHIGH:
-                    //Log.e("normal-xhdpi 1","normal-xhdpi");
-                    str = "normal-xhdpi";
-                    str_device = "normal-xhdpi";
-                    value = 90;
-                    break;
-                case DisplayMetrics.DENSITY_XXHIGH:
-                    // Log.e("normal-xxhdpi 1","normal-xxhdpi");
-                    str = "normal-xxhdpi";
-                    str_device = "normal-xxhdpi";
-                    value = 96;
-                    break;
-                case DisplayMetrics.DENSITY_XXXHIGH:
-                    //Log.e("normal-xxxhdpi","normal-xxxhdpi");
-                    str = "normal-xxxhdpi";
-                    str_device = "normal-xxxhdpi";
-                    value = 96;
-                    break;
-                case DisplayMetrics.DENSITY_TV:
-                    //Log.e("DENSITY_TV 1","normal-mdpi");
-                    str = "normal-tvdpi";
-                    str_device = "normal-tvmdpi";
-                    value = 96;
-                    break;
-                default:
-                    // Log.e("normal-unknown","normal-unknown");
-                    str = "normal-unknown";
-                    str_device = "normal-unknown";
-                    value = 82;
-                    break;
-            }
-        } else if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            switch (context.getResources().getDisplayMetrics().densityDpi) {
-                case DisplayMetrics.DENSITY_LOW:
-                    str = "large-ldpi";
-                    // Log.e("large-ldpi 1","normal-ldpi");
-                    value = 78;
-                    break;
-                case DisplayMetrics.DENSITY_MEDIUM:
-                    str = "large-mdpi";
-                    //Log.e("large-ldpi 1","normal-mdpi");
-                    value = 78;
-                    break;
-                case DisplayMetrics.DENSITY_HIGH:
-                    //Log.e("large-ldpi 1","normal-hdpi");
-                    str = "large-hdpi";
-                    value = 78;
-                    break;
-                case DisplayMetrics.DENSITY_XHIGH:
-                    // Log.e("large-ldpi 1","normal-xhdpi");
-                    str = "large-xhdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_XXHIGH:
-                    //Log.e("large-ldpi 1","normal-xxhdpi");
-                    str = "large-xxhdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_XXXHIGH:
-                    // Log.e("large-ldpi 1","normal-xxxhdpi");
-                    str = "large-xxxhdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_TV:
-                    //Log.e("large-ldpi 1","normal-tvdpi");
-                    str = "large-tvdpi";
-                    value = 125;
-                    break;
-                default:
-                    str = "large-unknown";
-                    value = 78;
-                    break;
-            }
-
-        } else if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
-            switch (context.getResources().getDisplayMetrics().densityDpi) {
-                case DisplayMetrics.DENSITY_LOW:
-                    // Log.e("large-ldpi 1","normal-ldpi");
-                    str = "xlarge-ldpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_MEDIUM:
-                    // Log.e("large-ldpi 1","normal-mdpi");
-                    str = "xlarge-mdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_HIGH:
-                    //Log.e("large-ldpi 1","normal-hdpi");
-                    str = "xlarge-hdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_XHIGH:
-                    // Log.e("large-ldpi 1","normal-hdpi");
-                    str = "xlarge-xhdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_XXHIGH:
-                    // Log.e("large-ldpi 1","normal-xxhdpi");
-                    str = "xlarge-xxhdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_XXXHIGH:
-                    // Log.e("large-ldpi 1","normal-xxxhdpi");
-                    str = "xlarge-xxxhdpi";
-                    value = 125;
-                    break;
-                case DisplayMetrics.DENSITY_TV:
-                    //Log.e("large-ldpi 1","normal-tvdpi");
-                    str = "xlarge-tvdpi";
-                    value = 125;
-                    break;
-                default:
-                    str = "xlarge-unknown";
-                    value = 125;
-                    break;
-            }
-        }
-
-        return value;
-    }
 
 }
 

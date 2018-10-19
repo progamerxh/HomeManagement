@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class ScenarioActivity extends AppCompatActivity {
     private RecyclerView scenariorecycleview;
     static Context mContext;
     private ImageButton btnExpand;
+    private FrameLayout roomsnav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,14 @@ public class ScenarioActivity extends AppCompatActivity {
         actionBar.setTitle("");
         actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.account_outline));
 
+        roomsnav =(FrameLayout) findViewById(R.id.roomFrame);
+        roomsnav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(mContext, RoomActivity.class);
+                startActivity(myIntent);
+            }
+        });
         scenariorecycleview = (RecyclerView) findViewById(R.id.scenario_recycleview);
         final LinearLayoutManager layoutManagerScenarios = new LinearLayoutManager(ScenarioActivity.this, LinearLayoutManager.HORIZONTAL, false);
         scenariorecycleview.setItemAnimator(new DefaultItemAnimator());
@@ -80,6 +90,20 @@ public class ScenarioActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent myIntent = new Intent(mContext, ProfileActivity.class);
+                startActivity(myIntent);
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

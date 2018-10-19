@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import tkgd.homemanagement.Activity.NewRoomActivity;
 
@@ -37,9 +38,11 @@ public class RoomPhotoFragment extends Fragment {
         final String message = getArguments().getString(EXTRA_MESSAGE);
         int int_image = getArguments().getInt(IMAGE);
         view = inflater.inflate(R.layout.room_pager_fragment, container, false);
+        LinearLayout layoutConnection = (LinearLayout) view.findViewById(R.id.layoutConnection);
         final ImageView iv_image = (ImageView) view.findViewById(R.id.iv_image);
 
         if (message == "NEW_ROOM") {
+            layoutConnection.setVisibility(View.INVISIBLE);
             iv_image.setPadding(150,150,150,150);
         }
         iv_image.setImageResource(int_image);
@@ -48,6 +51,7 @@ public class RoomPhotoFragment extends Fragment {
             public void onClick(View v) {
                 if (message == "NEW_ROOM") {
                     Intent intent = new Intent(getContext(), NewRoomActivity.class);
+                    intent.putExtra("TYPE", "ROOM");
                     startActivity(intent);
                 }
             }

@@ -31,8 +31,8 @@
         android:layout_margin="5dp"
         android:background="@drawable/round_corner_background"
         android:hint="Scenario name"
-        android:inputType="textFilter"
         android:imeOptions="actionDone"
+        android:inputType="textFilter"
         android:padding="10dp"
         android:selectAllOnFocus="true"
         android:singleLine="true"
@@ -41,18 +41,29 @@
         android:textCursorDrawable="@null"
         android:textSize="22sp" />
 
+    <Button
+        android:id="@+id/btnDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:background="@drawable/round_corner_background"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Import current devices configuration"
+        android:textColor="@android:color/white" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/roomPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
->
+        android:layout_height="match_parent">
 
         <android.support.v4.view.PagerTabStrip
             android:id="@+id/pager_header"
+            style="@style/viewPagerTitleStrip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            style="@style/viewPagerTitleStrip"
             android:paddingTop="5dp"
             android:paddingBottom="5dp" />
     </android.support.v4.view.ViewPager>

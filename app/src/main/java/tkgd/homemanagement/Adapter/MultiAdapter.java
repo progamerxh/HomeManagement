@@ -1,11 +1,14 @@
 package tkgd.homemanagement.Adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,11 +28,13 @@ import java.util.ArrayList;
 
 import tkgd.homemanagement.Activity.DeviceActivity;
 import tkgd.homemanagement.Activity.NewDeviceActivity;
+import tkgd.homemanagement.Activity.NewRoomActivity;
 import tkgd.homemanagement.Activity.NewScenarioActivity;
-import tkgd.homemanagement.Activity.RoomActivity;
 import tkgd.homemanagement.Model.Notification;
 import tkgd.homemanagement.Model.ScenarioItem;
+import tkgd.homemanagement.Model.System;
 import tkgd.homemanagement.R;
+import tkgd.homemanagement.Utility.MyDefinition;
 
 
 public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder> {
@@ -37,8 +42,10 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     private ArrayList<String> devices;
     private ArrayList<ScenarioItem> scenarioItems;
     private ArrayList<Notification> notifications;
+    private ArrayList<System> systems;
     private int[] colors = {R.color.pastel_1, R.color.pastel_2, R.color.pastel_3, R.color.pastel_4, R.color.light_grey, R.color.light_blue, R.color.light_green, R.color.light_red};
-    private String[] sockets = {"Wifi","TV","Fan", "Xaomi"};
+    private String[] sockets = {"Wifi", "TV", "Fan", "Xaomi"};
+    private String[] lights = {"All", "Light 1", "Light 2"};
     private Context context;
     private int mtype;
 
@@ -49,17 +56,19 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
 
         }
     }
-
+    public MultiAdapter() {}
 
     public MultiAdapter(Context context, int type) {
         mtype = type;
+        systems = new ArrayList<>();
         scenarioItems = new ArrayList<>();
         devices = new ArrayList<>();
         notifications = new ArrayList<>();
+        systems.add(new System("My house", R.drawable.kitchen));
+        systems.add(new System("Son's house", R.drawable.livingroom));
         scenarioItems.add(new ScenarioItem("I'm at home", false));
         scenarioItems.add(new ScenarioItem("Go to work", false));
         scenarioItems.add(new ScenarioItem("I'm outside", false));
-        scenarioItems.add(new ScenarioItem());
         notifications.add(0, new Notification(false));
         notifications.add(0, new Notification(false));
         notifications.add(0, new Notification(false));
@@ -70,7 +79,8 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         devices.add("Climate");
         devices.add("Electricity");
         devices.add("Wifi");
-        devices.add("");
+        devices.add("Camera");
+
         this.context = context;
     }
 
@@ -87,8 +97,8 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 viewHolder = new DeviceViewHolder(view);
                 break;
             case 2:
-                view = View.inflate(parent.getContext(), R.layout.item_scenario, null);
-                viewHolder = new ScenarioViewHolder(view);
+                view = View.inflate(parent.getContext(), R.layout.item_cardview_outline, null);
+                viewHolder = new CardViewOutLineViewHolder(view);
                 break;
             case 3:
                 //Match_parent width
@@ -114,6 +124,14 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                         .inflate(R.layout.item_electricity_socket, parent, false);
                 viewHolder = new SocketViewHolder(view);
                 break;
+            case 7:
+                view = View.inflate(parent.getContext(), R.layout.item_cardview_outline, null);
+                viewHolder = new CardViewOutLineViewHolder(view);
+                break;
+            case 8:
+                view = View.inflate(parent.getContext(), R.layout.item_system, null);
+                viewHolder = new SystemViewHolder(view);
+                break;
             case -1:
             case -2:
                 view = View.inflate(parent.getContext(), R.layout.add_item, null);
@@ -128,16 +146,17 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         // Current Restaurant
         switch (mtype) {
             case 0:
+                    return;
             case 1:
-                if (position == devices.size() - 1)
+                if (position == devices.size())
                     return;
                 DeviceViewHolder deviceViewHolder = (DeviceViewHolder) holder;
                 deviceViewHolder.txtDeviceName.setText(devices.get(position));
                 break;
             case 2:
-                if (position == scenarioItems.size() - 1)
+                if (position == scenarioItems.size())
                     return;
-                ScenarioViewHolder scenarioViewHolder = (ScenarioViewHolder) holder;
+                CardViewOutLineViewHolder scenarioViewHolder = (CardViewOutLineViewHolder) holder;
                 ScenarioItem scenarioItem = scenarioItems.get(position);
                 scenarioViewHolder.txtName.setText(scenarioItem.getName());
                 if (scenarioItem.isSelected()) {
@@ -156,6 +175,8 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 }
                 break;
             case 4:
+                DeviceScheduleViewHolder scheduleViewHolder = (DeviceScheduleViewHolder) holder;
+                scheduleViewHolder.txtDevice.setText(devices.get(position));
                 break;
             case 5:
                 ColorViewHolder colorViewHolder = (ColorViewHolder) holder;
@@ -180,6 +201,31 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 });
 
                 break;
+            case 7:
+                if (position == lights.length)
+                    return;
+                final CardViewOutLineViewHolder lightViewHolder = (CardViewOutLineViewHolder) holder;
+                lightViewHolder.txtName.setText(lights[position]);
+                lightViewHolder.imgicon.setBackgroundDrawable(context.getDrawable(R.drawable.lightbulb));
+                lightViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        lightViewHolder.frameLayout.setBackgroundResource(R.drawable.item_full);
+                    }
+                });
+                break;
+            case 8:
+                SystemViewHolder systemViewHolder = (SystemViewHolder) holder;
+                if (position == systems.size()) {
+                    systemViewHolder.txtSystem.setText("New system");
+                    systemViewHolder.imgPhoto.setImageResource(R.drawable.plus_circle_outline);
+                    systemViewHolder.txtRoomCount.setText("");
+                } else {
+                    systemViewHolder.txtSystem.setText(systems.get(position).getName());
+                    systemViewHolder.imgPhoto.setImageResource(systems.get(position).getPhotoID());
+                }
+                break;
             default:
                 break;
         }
@@ -190,18 +236,22 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     public int getItemCount() {
         switch (mtype) {
             case 0:
+                return 1;
             case 1:
-                return devices.size();
+                return devices.size() + 1;
             case 2:
-                return scenarioItems.size();
+                return scenarioItems.size() + 1;
             case 3:
                 return notifications.size();
             case 4:
-                return notifications.size();
+                return devices.size();
             case 5:
                 return colors.length + 1;
             case 6:
                 return sockets.length;
+            case 7:
+            case 8:
+                return systems.size() + 1;
             default:
                 return 0;
         }
@@ -209,9 +259,11 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        if ((mtype == 1 || mtype == 0) && (position == (devices.size() - 1)))
+        if ((mtype == 1) && (position == (devices.size())))
             return -1;
-        else if (mtype == 2 && (position == (scenarioItems.size() - 1)))
+        else if ((mtype == 0) && (position == 0))
+            return -1;
+        else if (mtype == 2 && (position == (scenarioItems.size())))
             return -2;
         return mtype;
     }
@@ -282,22 +334,62 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                     Intent intent = new Intent(context, DeviceActivity.class);
                     intent.putExtra("DEVICE_TYPE", devices.get(pos));
                     context.startActivity(intent);
+
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    final BottomSheetDialog managedialog = new BottomSheetDialog(context);
+                    managedialog.setContentView(R.layout.bottomsheet_dialog);
+                    final BottomSheetDialog undodialog = new BottomSheetDialog(context);
+                    undodialog.setContentView(R.layout.undo_dialog);
+                    TextView txtEdit = (TextView) managedialog.findViewById(R.id.txtEdit);
+                    TextView txtDelete = (TextView) managedialog.findViewById(R.id.txtDelete);
+                    View view = ((Activity) context).findViewById(R.id.layoutRoom);
+                    final Snackbar snackbar = Snackbar.make(view, "Device " + txtDeviceName.getText() + " is deleted", Snackbar.LENGTH_SHORT);
+                    snackbar.setAction("UNDO", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            snackbar.dismiss();
+                        }
+                    });
+
+                    txtEdit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            managedialog.hide();
+
+                        }
+                    });
+                    txtDelete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            managedialog.hide();
+
+                            snackbar.show();
+                        }
+                    });
+                    managedialog.show();
+                    return true;
                 }
             });
         }
     }
 
-    class ScenarioViewHolder extends MyViewHolder {
+    class CardViewOutLineViewHolder extends MyViewHolder {
         private ToggleButton imgicon;
         private FrameLayout frameLayout;
         private TextView txtName;
 
-        public ScenarioViewHolder(View itemView) {
+        public CardViewOutLineViewHolder(View itemView) {
             super(itemView);
             imgicon = (ToggleButton) itemView.findViewById(R.id.btnIcon);
             txtName = (TextView) itemView.findViewById(R.id.txtScenarioName);
             imgicon.setClickable(false);
             frameLayout = (FrameLayout) itemView.findViewById(R.id.frameBackGround);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -313,10 +405,49 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                         scenarioItem.setSelected(!scenarioItem.isSelected());
                         notifyDataSetChanged();
                     }
-                    Intent myIntent = new Intent(context, RoomActivity.class);
-                    context.startActivity(myIntent);
+
                 }
             });
+            if (mtype == MyDefinition.ADAPTER_SCENARIO) {
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        final BottomSheetDialog managedialog = new BottomSheetDialog(context);
+                        managedialog.setContentView(R.layout.bottomsheet_dialog);
+                        final BottomSheetDialog undodialog = new BottomSheetDialog(context);
+                        undodialog.setContentView(R.layout.undo_dialog);
+                        TextView txtEdit = (TextView) managedialog.findViewById(R.id.txtEdit);
+                        TextView txtDelete = (TextView) managedialog.findViewById(R.id.txtDelete);
+                        View view = ((Activity) context).findViewById(R.id.layoutScenario);
+                        final Snackbar snackbar = Snackbar.make(view, "Scenario " + txtName.getText() + " is deleted", Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                snackbar.dismiss();
+                            }
+                        });
+
+                        txtEdit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                managedialog.hide();
+
+                            }
+                        });
+                        txtDelete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                managedialog.hide();
+
+                                snackbar.show();
+                            }
+                        });
+                        managedialog.show();
+                        return true;
+                    }
+                });
+            }
         }
     }
 
@@ -344,18 +475,35 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     class DeviceScheduleViewHolder extends MyViewHolder {
         private CardView cardview;
         private Switch switchBtn;
+        private TextView txtDevice;
+        private TextView txtConfig;
+        private TextView txtState;
 
         public DeviceScheduleViewHolder(View itemView) {
             super(itemView);
             cardview = (CardView) itemView.findViewById(R.id.card_view);
             switchBtn = (Switch) itemView.findViewById(R.id.switchBtn);
+            txtDevice = (TextView) itemView.findViewById(R.id.txtDeviceName);
+            txtConfig = (TextView) itemView.findViewById(R.id.txtConfig);
+            txtState = (TextView) itemView.findViewById(R.id.txtState);
             switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked)
+                    if (isChecked) {
                         cardview.setCardBackgroundColor(ContextCompat.getColor(context, R.color.light_grey));
-                    else
+                        txtDevice.setTextColor(Color.WHITE);
+                        txtConfig.setTextColor(Color.WHITE);
+                        txtState.setText("Device will turn on");
+                        txtState.setTextColor(ContextCompat.getColor(context, R.color.light_green));
+
+
+                    } else {
+                        txtDevice.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
                         cardview.setCardBackgroundColor(Color.TRANSPARENT);
+                        txtState.setText("Device will turn off");
+                        txtState.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
+                        txtConfig.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
+                    }
                 }
             });
         }
@@ -378,6 +526,30 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imgSocket);
             txtSocketName = (TextView) itemView.findViewById(R.id.txtSocketName);
+        }
+    }
+
+    class SystemViewHolder extends MyViewHolder {
+        private ImageView imgPhoto;
+        private TextView txtSystem;
+        private TextView txtRoomCount;
+
+        public SystemViewHolder(View itemView) {
+            super(itemView);
+            imgPhoto = (ImageView) itemView.findViewById(R.id.imgPhoto);
+            txtSystem = (TextView) itemView.findViewById(R.id.txtSystemName);
+            txtRoomCount = (TextView) itemView.findViewById(R.id.txtRoomCount);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getAdapterPosition() == systems.size())
+                    {
+                        Intent myIntent = new Intent(context, NewRoomActivity.class);
+                        myIntent.putExtra("TYPE", "SYSTEM");
+                        context.startActivity(myIntent);
+                    }
+                }
+            });
         }
     }
 }

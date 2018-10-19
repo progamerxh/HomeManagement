@@ -108,7 +108,7 @@
                 android:progressDrawable="@drawable/seekbar_style"
                 android:rotation="270"
                 android:splitTrack="false"
-                android:thumb="@drawable/custom_thumb"
+                android:thumb="@drawable/seekbar_thumb"
                 android:thumbOffset="-5dp"
                 android:translationX="-110dp"
                 android:translationY="160dp" />

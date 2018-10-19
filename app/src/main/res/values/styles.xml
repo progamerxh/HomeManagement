@@ -32,6 +32,11 @@
         <!-- inactive thumb color -->
         <item name="colorSwitchThumbNormal">#f1f1f1
         </item>
-
+    </style>
+    <style name="Autocomplete">
+        <item name="colorControlNormal">@color/light_grey</item>
+        <item name="android:autofilledHighlight">@color/light_grey</item>
+        <item name="android:textColorHint">@color/light_grey</item>
+        <item name="colorControlActivated">@android:color/white</item>
     </style>
 </resources>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutScenario"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_grey"
-    android:orientation="vertical"
     tools:context=".Activity.ScenarioActivity">
 
     <LinearLayout
@@ -14,13 +14,19 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/roomFrame"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@drawable/kitchen"
             android:orientation="vertical">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/kitchen" />
 
             <android.support.design.widget.AppBarLayout
+                android:layout_gravity="top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -35,10 +41,11 @@
                 </android.support.v7.widget.Toolbar>
             </android.support.design.widget.AppBarLayout>
 
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
                 android:padding="20dp"
                 android:shadowColor="@android:color/black"
                 android:shadowDx="2"
@@ -51,6 +58,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="40dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -61,7 +70,7 @@
                     android:layout_marginTop="3dp"
                     android:background="@drawable/green_circle"
                     android:padding="3dp"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:visibility="visible" />
 
                 <TextView
@@ -77,7 +86,19 @@
                     android:textColor="@android:color/white" />
 
             </LinearLayout>
-        </LinearLayout>
+            <TextView
+                android:id="@+id/txtRooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom |end"
+                android:text="Rooms ›"
+                android:textSize="20sp"
+                android:padding="5dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/round_corner_background"
+                android:backgroundTint="#5000"
+                />
+        </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -92,7 +113,6 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="20dp"
                 android:background="@android:color/transparent"
-                android:gravity="start |bottom"
                 android:text="Select scenario"
                 android:textAllCaps="false"
                 android:textColor="@color/light_grey"
@@ -105,7 +125,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="20dp"
                 android:background="@android:color/transparent"
-                android:gravity="bottom |end"
                 android:src="@drawable/expand_button"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
@@ -118,8 +137,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:padding="10dp"
-            android:clipToPadding="false">
+            android:clipToPadding="false"
+            android:padding="10dp">
 
         </android.support.v7.widget.RecyclerView>
 

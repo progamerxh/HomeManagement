@@ -13,8 +13,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:background="@drawable/item_border"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <ImageView
@@ -39,26 +39,28 @@
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:text="Device"
+                android:textColor="@color/light_grey"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/txtOnTimes"
+                android:id="@+id/txtConfig"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="220dp"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:text="Turn on: 4:35 16:00aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                android:text="Config: "
+                android:textColor="@color/light_grey"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/txtOffTimes"
+                android:id="@+id/txtState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="220dp"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:text="Turn off: 6:00 12:00aaaaaaaaaaaaaaaaaaaaaaaa"
+                android:text="Device will turn off"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -69,7 +71,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:paddingTop="5dp"
-            android:paddingBottom="0dp" />
+            android:paddingBottom="0dp"
+            android:theme="@style/CustomSwitch" />
 
     </LinearLayout>
 

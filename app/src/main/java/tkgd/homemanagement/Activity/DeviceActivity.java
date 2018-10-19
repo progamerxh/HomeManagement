@@ -2,6 +2,7 @@ package tkgd.homemanagement.Activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,10 +10,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -23,15 +28,18 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import tkgd.homemanagement.Adapter.MultiAdapter;
 import tkgd.homemanagement.R;
 import tkgd.homemanagement.Utility.ItemOffsetDecoration;
+import tkgd.homemanagement.Utility.JoyStickClass;
+import tkgd.homemanagement.Utility.MyDefinition;
+
+import static java.lang.Thread.sleep;
 
 public class DeviceActivity extends AppCompatActivity {
     private String deviceType;
@@ -62,11 +70,58 @@ public class DeviceActivity extends AppCompatActivity {
                 setContentView(R.layout.device_wifi);
                 WifiDeviceInitial();
                 break;
+            case "Camera":
+                setContentView(R.layout.device_camera);
+                CameraDeviceInitial();
+                break;
             default:
                 break;
         }
 
     }
+
+    private void CameraDeviceInitial() {
+        final ImageView imgPhoto;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(deviceType);
+        toolbar.setTitleTextColor(Color.WHITE);
+
+        imgPhoto = (ImageView) findViewById(R.id.imgPhoto);
+        RelativeLayout layout_joystick = (RelativeLayout) findViewById(R.id.layout_joystick);
+        final JoyStickClass js = new JoyStickClass(getApplicationContext(), layout_joystick, R.drawable.joystick_stick);
+        js.setStickSize(150, 150);
+        js.setLayoutSize(800, 800);
+        js.setLayoutAlpha(150);
+        js.setStickAlpha(100);
+        js.setOffset(90);
+        js.setMinimumDistance(50);
+        imgPhoto.setScaleX(2.f);
+        imgPhoto.setScaleY(2.f);
+
+        layout_joystick.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                js.drawStick(arg1);
+                if (arg1.getAction() == MotionEvent.ACTION_DOWN
+                       || arg1.getAction() == MotionEvent.ACTION_MOVE ) {
+                    float Xseek = imgPhoto.getX() - js.getX() / 10;
+                    float YSeek = imgPhoto.getY() - js.getY() / 10;
+                    int direction = js.get8Direction();
+
+                    imgPhoto.setX(Xseek);
+                    imgPhoto.setY(YSeek);
+                }
+                if (arg1.getAction() == MotionEvent.ACTION_UP) {
+                }
+                return true;
+            }
+        });
+
+    }
+
 
     private void WifiDeviceInitial() {
         LineChart chartUsage;
@@ -79,26 +134,24 @@ public class DeviceActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
 
         chartUsage = (LineChart) findViewById(R.id.chartUsage);
-        int downloads[][] = {{1,22},{2,35},{3,21},{4,37},{5,42},{6,11},{7,23},{8,47}};
-        int uploads[][] = {{1,33},{2,21},{3,41},{4,27},{5,33},{6,25},{7,22},{8,37}};
+        int downloads[][] = {{1, 22}, {2, 35}, {3, 21}, {4, 37}, {5, 42}, {6, 11}, {7, 23}, {8, 47}};
+        int uploads[][] = {{1, 33}, {2, 21}, {3, 41}, {4, 27}, {5, 33}, {6, 25}, {7, 22}, {8, 37}};
         List<Entry> entries1 = new ArrayList<Entry>();
         List<Entry> entries2 = new ArrayList<Entry>();
-        for (int download[] : downloads)
-        {
+        for (int download[] : downloads) {
             entries1.add(new Entry(download[0], download[1]));
         }
-        for (int upload[] : uploads)
-        {
+        for (int upload[] : uploads) {
             entries2.add(new Entry(upload[0], upload[1]));
         }
-        LineDataSet downloadSet = new LineDataSet(entries1,"Download");
+        LineDataSet downloadSet = new LineDataSet(entries1, "Download");
         downloadSet.setColor(Color.GREEN);
         downloadSet.setDrawCircles(false);
         downloadSet.setDrawCircleHole(false);
         downloadSet.setDrawValues(false);
         downloadSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
-        LineDataSet uploadSet = new LineDataSet(entries2,"Upload");
+        LineDataSet uploadSet = new LineDataSet(entries2, "Upload");
         uploadSet.setColor(Color.WHITE);
         uploadSet.setDrawCircles(false);
         uploadSet.setDrawCircleHole(false);
@@ -156,14 +209,13 @@ public class DeviceActivity extends AppCompatActivity {
         socketsrecyler.addItemDecoration(itemDecoration);
 
         chartUsage = (LineChart) findViewById(R.id.chartUsage);
-        int usages[][] = {{1,22},{2,35},{3,21},{4,37},{5,42},{6,11},{7,23},{8,47}};
+        int usages[][] = {{1, 22}, {2, 35}, {3, 21}, {4, 37}, {5, 42}, {6, 11}, {7, 23}, {8, 47}};
         List<Entry> entries = new ArrayList<Entry>();
-        for (int hourusage[] : usages)
-        {
+        for (int hourusage[] : usages) {
             entries.add(new Entry(hourusage[0], hourusage[1]));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries,"Wh");
+        LineDataSet dataSet = new LineDataSet(entries, "Wh");
         dataSet.setColor(Color.WHITE);
         dataSet.setValueTextColor(Color.WHITE);
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
@@ -213,7 +265,7 @@ public class DeviceActivity extends AppCompatActivity {
         lightsrecycler.setLayoutManager(layoutManagerScenarios);
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter lightsadapter = new MultiAdapter(getApplicationContext(), 2);
+        MultiAdapter lightsadapter = new MultiAdapter(getApplicationContext(), MyDefinition.ADAPTER_LIGHT);
         lightsrecycler.setAdapter(lightsadapter);
         lightsrecycler.addItemDecoration(itemDecoration);
 

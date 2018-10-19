@@ -56,7 +56,7 @@ public class NewDeviceActivity extends AppCompatActivity {
         deviceReyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter multiAdapter = new MultiAdapter(mContext, 0);
+        MultiAdapter multiAdapter = new MultiAdapter(mContext, 1);
         deviceReyclerView.setAdapter(multiAdapter);
         deviceReyclerView.addItemDecoration(itemDecoration);
 

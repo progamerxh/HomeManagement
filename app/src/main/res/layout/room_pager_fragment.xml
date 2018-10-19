@@ -19,5 +19,31 @@
         android:scaleType="centerCrop"
         android:src="@drawable/kitchen" />
 
+    <LinearLayout
+        android:id="@+id/layoutConnection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:background="@drawable/round_corner_background"
+        android:backgroundTint="#5000"
+        android:layout_gravity="end"
+        android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/status_dot"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/green_circle" />
+        <TextView
+            android:id="@+id/txtConnection"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_height="wrap_content"
+            android:text="Live"
+            android:textColor="@android:color/white"
+            />
+    </LinearLayout>
+
 
 </android.support.v7.widget.CardView>
