@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_corner_background"
+        android:background="@drawable/ab_gradient"
         android:orientation="vertical">
 
         <TextView
@@ -20,7 +20,7 @@
             android:paddingTop="5dp"
             android:textColor="@android:color/white"
             android:text="System 1"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
         <TextView
             android:id="@+id/txtRoomCount"
             android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:paddingStart="10dp"
             android:text="4 rooms"
             android:paddingBottom="5dp"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/imgPhoto"

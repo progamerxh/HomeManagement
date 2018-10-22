@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Level"
+                android:text="Fan"
                 android:textColor="@color/light_grey" />
 
             <SeekBar
@@ -98,7 +98,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
                 android:gravity="center"
-                android:text="23*C"
+                android:text="23°C"
                 android:textColor="@android:color/white"
                 android:textSize="30sp" />
 
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Level"
+                android:text="Temperature"
                 android:textColor="@color/light_grey" />
 
             <SeekBar

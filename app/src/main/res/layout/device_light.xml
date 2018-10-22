@@ -100,7 +100,7 @@
                 android:textColor="@color/light_grey" />
 
             <SeekBar
-                android:id="@+id/seekbar_level"
+                android:id="@+id/seekbar_LightLevel"
                 android:layout_width="400dp"
                 android:layout_height="80dp"
                 android:maxHeight="80sp"

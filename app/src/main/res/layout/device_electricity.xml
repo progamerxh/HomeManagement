@@ -50,14 +50,14 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp">
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="400 Wh"
             android:textColor="@android:color/white"
-            android:textSize="24sp" />
+            android:textSize="30sp" />
 
         <ImageView
             android:layout_width="40dp"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:text="130,000 vnđ"
             android:textColor="@android:color/white"
-            android:textSize="24sp" />
+            android:textSize="30sp" />
     </LinearLayout>
 
 </LinearLayout>

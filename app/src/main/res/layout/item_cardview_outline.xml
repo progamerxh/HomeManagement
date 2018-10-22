@@ -12,7 +12,7 @@
         android:id="@+id/frameBackGround"
         android:layout_width="150dp"
         android:layout_height="100dp"
-        android:background="@drawable/item_border">
+        android:background="@drawable/cardview_state">
 
         <ToggleButton
             android:id="@+id/btnIcon"

@@ -48,6 +48,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center_vertical"
+                    android:scaleY="0.9"
+                    android:scaleX="0.9"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="3dp"
                     android:src="@drawable/search" />
@@ -56,22 +58,18 @@
                     android:id="@+id/txtDevice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="48dp"
                     android:layout_marginEnd="45dp"
                     android:hint="Device's name or type"
+                    android:textColorHint="@color/light_grey"
                     android:background="@color/dark_grey"
                     android:inputType="textFilter"
                     android:padding="10dp"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
-                    android:textColorHighlight="@color/dark_grey"
+                    android:textColorHighlight="@color/light_grey"
                     android:textCursorDrawable="@null"
                     android:textSize="20sp" />
 
@@ -83,6 +81,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="15dp"
                     android:src="@drawable/camera" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/light_grey"/>
             </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
@@ -109,6 +115,7 @@
             android:id="@+id/device_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:clipToPadding="false"
             android:nestedScrollingEnabled="false" />
 

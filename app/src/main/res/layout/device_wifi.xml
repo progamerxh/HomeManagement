@@ -27,7 +27,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:background="@drawable/ab_gradient"
         android:layout_weight="2"
         android:padding="20dp">
 
@@ -58,7 +58,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_gravity="left"
-
             android:text="Today"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
@@ -71,8 +70,8 @@
             android:layout_alignParentEnd="true"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:text="22.11 gb"
-            android:textColor="@android:color/white"
+            android:text="↓ 22.11 gb"
+            android:textColor="@color/light_green"
             android:textSize="20sp" />
 
         <TextView
@@ -82,7 +81,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
-            android:text="11.22 gb"
+            android:text="↑ 11.22 gb"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 

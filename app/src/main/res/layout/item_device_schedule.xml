@@ -13,12 +13,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/item_border"
         android:orientation="horizontal"
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/imgDeviceIcon"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -61,6 +60,7 @@
                 android:padding="5dp"
                 android:singleLine="true"
                 android:text="Device will turn off"
+                android:textColor="@color/light_grey"
                 android:textSize="16sp" />
 
         </LinearLayout>

@@ -9,16 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tkgd.homemanagement.Adapter.PageAdapter;
+import tkgd.homemanagement.Model.Room;
 import tkgd.homemanagement.R;
 import tkgd.homemanagement.RoomScheduleFragment;
 
 public class NewScenarioActivity extends AppCompatActivity {
-
+    private EditText txtScenarioName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +30,13 @@ public class NewScenarioActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("New scenario");
+        txtScenarioName = (EditText) findViewById(R.id.txtScenarioName);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            actionBar.setTitle(extras.getString("SCENARIO_NAME"));
+            txtScenarioName.setText(extras.getString("SCENARIO_NAME"));
+        }
+        else actionBar.setTitle("New scenario");
         toolbar.setTitleTextColor(Color.WHITE);
         ViewPager viewPager = (ViewPager) findViewById(R.id.roomPager);
         List<Fragment> fragments = getFragments();

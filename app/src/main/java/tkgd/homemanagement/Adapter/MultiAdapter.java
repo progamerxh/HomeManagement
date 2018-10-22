@@ -19,9 +19,9 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
@@ -43,9 +43,14 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     private ArrayList<ScenarioItem> scenarioItems;
     private ArrayList<Notification> notifications;
     private ArrayList<System> systems;
-    private int[] colors = {R.color.pastel_1, R.color.pastel_2, R.color.pastel_3, R.color.pastel_4, R.color.light_grey, R.color.light_blue, R.color.light_green, R.color.light_red};
+    private int[] colors = {android.R.color.white, R.color.pastel_1, R.color.pastel_2, R.color.pastel_3, R.color.pastel_4, R.color.light_blue, R.color.light_green};
     private String[] sockets = {"Wifi", "TV", "Fan", "Xaomi"};
     private String[] lights = {"All", "Light 1", "Light 2"};
+    private String[] acmodes = {"Auto", "Cold", "Heat" ,"Dry" , "Fan"};
+    private int[] acmodeicons = {R.drawable.autorenew, R.drawable.frozen, R.drawable.sunny,R.drawable.water,R.drawable.fan};
+    private int[] deviceicons = {R.drawable.lightbulb, R.drawable.air_conditioner, R.drawable.socket_slected, R.drawable.wifi, R.drawable.cctv};
+    private String[] prop1 ={"","Fan", "Normal", "↓ 22.11 gb", "Normal"};
+    private String[] prop2 ={"","Cold", "", "↑ 11.22 gb", "Alert"};
     private Context context;
     private int mtype;
 
@@ -56,7 +61,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
 
         }
     }
-    public MultiAdapter() {}
+
 
     public MultiAdapter(Context context, int type) {
         mtype = type;
@@ -132,6 +137,15 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 view = View.inflate(parent.getContext(), R.layout.item_system, null);
                 viewHolder = new SystemViewHolder(view);
                 break;
+            case 9:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_device, parent, false);
+                viewHolder = new DeviceViewHolder(view);
+                break;
+            case 10:
+                view = View.inflate(parent.getContext(), R.layout.item_cardview_outline, null);
+                viewHolder = new CardViewOutLineViewHolder(view);
+                break;
             case -1:
             case -2:
                 view = View.inflate(parent.getContext(), R.layout.add_item, null);
@@ -142,16 +156,20 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         // Current Restaurant
         switch (mtype) {
             case 0:
-                    return;
+                return;
             case 1:
                 if (position == devices.size())
                     return;
                 DeviceViewHolder deviceViewHolder = (DeviceViewHolder) holder;
                 deviceViewHolder.txtDeviceName.setText(devices.get(position));
+                deviceViewHolder.imgDeviceIcon.setImageResource(deviceicons[position]);
+                deviceViewHolder.imgState.setBackgroundResource(deviceicons[position]);
+                deviceViewHolder.txtProp1.setText(prop1[position]);
+                deviceViewHolder.txtProp2.setText(prop2[position]);
                 break;
             case 2:
                 if (position == scenarioItems.size())
@@ -161,7 +179,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 scenarioViewHolder.txtName.setText(scenarioItem.getName());
                 if (scenarioItem.isSelected()) {
                     scenarioViewHolder.imgicon.setChecked(true);
-                    scenarioViewHolder.frameLayout.setBackgroundResource(R.drawable.item_full);
+                    scenarioViewHolder.frameLayout.setBackgroundResource(R.drawable.background_gradient);
                 } else {
                     scenarioViewHolder.imgicon.setChecked(false);
                     scenarioViewHolder.frameLayout.setBackgroundResource(R.drawable.item_border);
@@ -177,16 +195,32 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
             case 4:
                 DeviceScheduleViewHolder scheduleViewHolder = (DeviceScheduleViewHolder) holder;
                 scheduleViewHolder.txtDevice.setText(devices.get(position));
+                scheduleViewHolder.imgDeviceIcon.setImageResource(deviceicons[position]);
                 break;
             case 5:
-                ColorViewHolder colorViewHolder = (ColorViewHolder) holder;
-
+                final ColorViewHolder colorViewHolder = (ColorViewHolder) holder;
+                colorViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (position == colors.length)
+                            return;
+                        if (!colorViewHolder.imageView.isSelected()) {
+                            colorViewHolder.imageView.getBackground().setColorFilter(context.getColor(colors[position]),
+                                    PorterDuff.Mode.ADD);
+                            colorViewHolder.imageView.setSelected(true);
+                        } else {
+                            colorViewHolder.imageView.getBackground().setColorFilter(context.getColor(colors[position]),
+                                    PorterDuff.Mode.MULTIPLY);
+                            colorViewHolder.imageView.setSelected(false);
+                        }
+                    }
+                });
                 if (position == colors.length) {
                     colorViewHolder.imageView.setImageResource(R.drawable.plus_circle_outline);
-                    colorViewHolder.imageView.getBackground().setColorFilter(context.getResources().getColor(R.color.dark_grey),
+                    colorViewHolder.imageView.getBackground().setColorFilter(context.getColor(R.color.dark_grey),
                             PorterDuff.Mode.MULTIPLY);
                 } else
-                    colorViewHolder.imageView.getBackground().setColorFilter(context.getResources().getColor(colors[position]),
+                    colorViewHolder.imageView.getBackground().setColorFilter(context.getColor(colors[position]),
                             PorterDuff.Mode.MULTIPLY);
                 break;
             case 6:
@@ -210,8 +244,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 lightViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        lightViewHolder.frameLayout.setBackgroundResource(R.drawable.item_full);
+                        lightViewHolder.frameLayout.setSelected(!lightViewHolder.frameLayout.isSelected());
                     }
                 });
                 break;
@@ -225,6 +258,22 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                     systemViewHolder.txtSystem.setText(systems.get(position).getName());
                     systemViewHolder.imgPhoto.setImageResource(systems.get(position).getPhotoID());
                 }
+                break;
+            case 9:
+                DeviceViewHolder listdeviceViewHolder = (DeviceViewHolder) holder;
+                listdeviceViewHolder.txtDeviceName.setText(devices.get(position));
+                listdeviceViewHolder.imgDeviceIcon.setImageResource(deviceicons[position]);
+                break;
+            case 10:
+                final CardViewOutLineViewHolder acmodeViewHolder = (CardViewOutLineViewHolder) holder;
+                acmodeViewHolder.txtName.setText(acmodes[position]);
+                acmodeViewHolder.imgicon.setBackgroundDrawable(context.getDrawable(acmodeicons[position]));
+                acmodeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        acmodeViewHolder.frameLayout.setSelected(!acmodeViewHolder.frameLayout.isSelected());
+                    }
+                });
                 break;
             default:
                 break;
@@ -250,8 +299,13 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
             case 6:
                 return sockets.length;
             case 7:
+                return lights.length;
             case 8:
                 return systems.size() + 1;
+            case 9:
+                return deviceicons.length;
+            case 10:
+                return acmodes.length;
             default:
                 return 0;
         }
@@ -322,59 +376,67 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
 
     class DeviceViewHolder extends MyViewHolder {
         private TextView txtDeviceName;
-
+        private ImageView imgDeviceIcon;
+        private ImageView imgState;
+        private TextView txtProp1;
+        private TextView txtProp2;
         public DeviceViewHolder(View itemView) {
             super(itemView);
             txtDeviceName = (TextView) itemView.findViewById(R.id.txtDeviceName);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    Toast.makeText(context, "Item choosen: " + devices.get(pos), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, DeviceActivity.class);
-                    intent.putExtra("DEVICE_TYPE", devices.get(pos));
-                    context.startActivity(intent);
+            imgDeviceIcon = (ImageView) itemView.findViewById(R.id.imgDeviceIcon);
+            imgState= (ImageView) itemView.findViewById(R.id.imgState);
+            txtProp1 = (TextView) itemView.findViewById(R.id.txtProp1);
+            txtProp2 = (TextView) itemView.findViewById(R.id.txtProp2);
+            if (mtype == MyDefinition.ADAPTER_DEVICE) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = getAdapterPosition();
+                        Intent intent = new Intent(context, DeviceActivity.class);
+                        intent.putExtra("DEVICE_TYPE", devices.get(pos));
+                        context.startActivity(intent);
 
-                }
-            });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    final BottomSheetDialog managedialog = new BottomSheetDialog(context);
-                    managedialog.setContentView(R.layout.bottomsheet_dialog);
-                    final BottomSheetDialog undodialog = new BottomSheetDialog(context);
-                    undodialog.setContentView(R.layout.undo_dialog);
-                    TextView txtEdit = (TextView) managedialog.findViewById(R.id.txtEdit);
-                    TextView txtDelete = (TextView) managedialog.findViewById(R.id.txtDelete);
-                    View view = ((Activity) context).findViewById(R.id.layoutRoom);
-                    final Snackbar snackbar = Snackbar.make(view, "Device " + txtDeviceName.getText() + " is deleted", Snackbar.LENGTH_SHORT);
-                    snackbar.setAction("UNDO", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    }
+                });
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        final BottomSheetDialog managedialog = new BottomSheetDialog(context);
+                        managedialog.setContentView(R.layout.bottomsheet_dialog);
+                        final BottomSheetDialog undodialog = new BottomSheetDialog(context);
+                        undodialog.setContentView(R.layout.undo_dialog);
+                        LinearLayout Edit = (LinearLayout) managedialog.findViewById(R.id.Edit);
+                        LinearLayout Delete = (LinearLayout) managedialog.findViewById(R.id.Delete);
+                        View view = ((Activity) context).findViewById(R.id.layoutRoom);
+                        final Snackbar snackbar = Snackbar.make(view, "Device " + txtDeviceName.getText() + " is deleted", Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                            snackbar.dismiss();
-                        }
-                    });
+                                snackbar.dismiss();
+                            }
+                        });
 
-                    txtEdit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            managedialog.hide();
+                        Edit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                managedialog.hide();
 
-                        }
-                    });
-                    txtDelete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            managedialog.hide();
+                            }
+                        });
+                        Delete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                managedialog.hide();
 
-                            snackbar.show();
-                        }
-                    });
-                    managedialog.show();
-                    return true;
-                }
-            });
+                                snackbar.show();
+                            }
+                        });
+                        managedialog.show();
+                        return true;
+                    }
+                });
+            }
         }
     }
 
@@ -416,26 +478,29 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                         managedialog.setContentView(R.layout.bottomsheet_dialog);
                         final BottomSheetDialog undodialog = new BottomSheetDialog(context);
                         undodialog.setContentView(R.layout.undo_dialog);
-                        TextView txtEdit = (TextView) managedialog.findViewById(R.id.txtEdit);
-                        TextView txtDelete = (TextView) managedialog.findViewById(R.id.txtDelete);
+                        LinearLayout Edit = (LinearLayout) managedialog.findViewById(R.id.Edit);
+                        LinearLayout Delete = (LinearLayout) managedialog.findViewById(R.id.Delete);
                         View view = ((Activity) context).findViewById(R.id.layoutScenario);
                         final Snackbar snackbar = Snackbar.make(view, "Scenario " + txtName.getText() + " is deleted", Snackbar.LENGTH_SHORT);
                         snackbar.setAction("UNDO", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
                                 snackbar.dismiss();
                             }
                         });
 
-                        txtEdit.setOnClickListener(new View.OnClickListener() {
+                        Edit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 managedialog.hide();
+                                Intent intent = new Intent(context,NewScenarioActivity.class);
+                                intent.putExtra("SCENARIO_NAME", scenarioItems.get(getAdapterPosition()).getName());
+                                context.startActivity(intent);
+
 
                             }
                         });
-                        txtDelete.setOnClickListener(new View.OnClickListener() {
+                        Delete.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 managedialog.hide();
@@ -460,7 +525,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Item choosen: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+
                     int selectedPosition = getAdapterPosition();
                     Notification notification = null;
                     notification = notifications.get(selectedPosition);
@@ -475,6 +540,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     class DeviceScheduleViewHolder extends MyViewHolder {
         private CardView cardview;
         private Switch switchBtn;
+        private ImageView imgDeviceIcon;
         private TextView txtDevice;
         private TextView txtConfig;
         private TextView txtState;
@@ -486,6 +552,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
             txtDevice = (TextView) itemView.findViewById(R.id.txtDeviceName);
             txtConfig = (TextView) itemView.findViewById(R.id.txtConfig);
             txtState = (TextView) itemView.findViewById(R.id.txtState);
+            imgDeviceIcon = (ImageView) itemView.findViewById(R.id.imgDeviceIcon);
             switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -511,10 +578,21 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
 
     class ColorViewHolder extends MyViewHolder {
         private ImageView imageView;
+        private int oldPos = -1;
+        private int curPos = -1;
 
         public ColorViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.imgColor);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int oldpos = curPos;
+                    curPos = getAdapterPosition();
+
+                }
+
+            });
         }
     }
 
@@ -542,8 +620,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (getAdapterPosition() == systems.size())
-                    {
+                    if (getAdapterPosition() == systems.size()) {
                         Intent myIntent = new Intent(context, NewRoomActivity.class);
                         myIntent.putExtra("TYPE", "SYSTEM");
                         context.startActivity(myIntent);

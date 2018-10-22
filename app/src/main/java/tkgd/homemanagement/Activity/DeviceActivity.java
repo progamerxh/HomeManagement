@@ -18,7 +18,9 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -124,6 +126,8 @@ public class DeviceActivity extends AppCompatActivity {
 
 
     private void WifiDeviceInitial() {
+        SeekBar seekBar;
+        final TextView txtSpeed;
         LineChart chartUsage;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -145,7 +149,7 @@ public class DeviceActivity extends AppCompatActivity {
             entries2.add(new Entry(upload[0], upload[1]));
         }
         LineDataSet downloadSet = new LineDataSet(entries1, "Download");
-        downloadSet.setColor(Color.GREEN);
+        downloadSet.setColor(getColor(R.color.light_green));
         downloadSet.setDrawCircles(false);
         downloadSet.setDrawCircleHole(false);
         downloadSet.setDrawValues(false);
@@ -167,14 +171,16 @@ public class DeviceActivity extends AppCompatActivity {
         xAxis.setTextSize(14);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setDrawAxisLine(true);
+        xAxis.setTextSize(10f);
+        xAxis.setGridColor(getColor(R.color.dark_grey));
         YAxis yAxisRight = chartUsage.getAxisRight();
         yAxisRight.setEnabled(false);
         YAxis yAxisLeft = chartUsage.getAxisLeft();
         yAxisLeft.setAxisMinValue(0);
         yAxisLeft.setSpaceTop(30);
         yAxisLeft.setTextColor(Color.WHITE);
-        yAxisLeft.setTextSize(14);
-        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setTextSize(10);
+        yAxisLeft.setGridColor(getColor(R.color.dark_grey));
 // set a custom value formatter
         Description description = new Description();
         description.setText("Down/Up load speed");
@@ -185,6 +191,26 @@ public class DeviceActivity extends AppCompatActivity {
         chartUsage.setHighlightPerTapEnabled(false);
 
         chartUsage.invalidate(); // refresh
+
+        seekBar = (SeekBar) findViewById(R.id.seekbar_speed);
+        txtSpeed = (TextView) findViewById(R.id.txtControlSpeed);
+        txtSpeed.setText(seekBar.getProgress() + "mbps");
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                txtSpeed.setText(seekBar.getProgress() + "mbps");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void ElectricityDeviceInitial() {
@@ -219,7 +245,7 @@ public class DeviceActivity extends AppCompatActivity {
         dataSet.setColor(Color.WHITE);
         dataSet.setValueTextColor(Color.WHITE);
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSet.setCircleColor(getResources().getColor(R.color.light_green));
+        dataSet.setCircleColor(getColor(R.color.light_green));
         dataSet.setCircleRadius(5f);
         dataSet.setValueTextSize(10f);
         LineData lineData = new LineData(dataSet);
@@ -229,14 +255,16 @@ public class DeviceActivity extends AppCompatActivity {
         xAxis.setTextSize(14);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setDrawAxisLine(true);
+        xAxis.setGridColor(getColor(R.color.light_grey));
+        xAxis.setTextSize(10);
         YAxis yAxisRight = chartUsage.getAxisRight();
         yAxisRight.setEnabled(false);
         YAxis yAxisLeft = chartUsage.getAxisLeft();
         yAxisLeft.setAxisMinValue(0);
         yAxisLeft.setSpaceTop(30);
         yAxisLeft.setTextColor(Color.WHITE);
-        yAxisLeft.setTextSize(14);
-        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setTextSize(10);
+        yAxisLeft.setGridColor(getColor(R.color.light_grey));
 // set a custom value formatter
         Description description = new Description();
         description.setText("Kilowatts hours");
@@ -250,6 +278,8 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     private void LightDeviceInitial() {
+        SeekBar seekBar;
+        final TextView txtLevel;
         RecyclerView lightsrecycler, colorrecycler;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -276,9 +306,31 @@ public class DeviceActivity extends AppCompatActivity {
         MultiAdapter coloradapter = new MultiAdapter(getApplicationContext(), 5);
         colorrecycler.setAdapter(coloradapter);
         colorrecycler.addItemDecoration(itemDecoration);
+
+        seekBar = (SeekBar) findViewById(R.id.seekbar_LightLevel) ;
+        txtLevel = (TextView) findViewById(R.id.txtLevel);
+        txtLevel.setText(seekBar.getProgress() + "%");
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                txtLevel.setText(seekBar.getProgress() + "%");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void ClimateDeviceInitial() {
+        final SeekBar seekBarFan, seekBarTemp;
+        final TextView txtFan, txtTemp;
         RecyclerView moderecycler;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -294,10 +346,49 @@ public class DeviceActivity extends AppCompatActivity {
         moderecycler.setLayoutManager(layoutManagerScenarios);
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter modeadapter = new MultiAdapter(getApplicationContext(), 2);
+        MultiAdapter modeadapter = new MultiAdapter(getApplicationContext(), 10);
         moderecycler.setAdapter(modeadapter);
         moderecycler.addItemDecoration(itemDecoration);
 
+        seekBarFan = (SeekBar) findViewById(R.id.seekbar_fan) ;
+        seekBarTemp = (SeekBar) findViewById(R.id.seekbar_temp) ;
+        txtFan = (TextView) findViewById(R.id.txtFan);
+        txtTemp = (TextView) findViewById(R.id.txtTemp);
+        txtFan.setText(seekBarFan.getProgress() + "%");
+        txtTemp.setText(16 + seekBarTemp.getProgress()/15 + "°C");
+
+        seekBarFan.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                txtFan.setText(seekBarFan.getProgress() + "%");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        seekBarTemp.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                txtTemp.setText(16 + seekBarTemp.getProgress()/7 + "°C");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override
@@ -310,7 +401,7 @@ public class DeviceActivity extends AppCompatActivity {
         stateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(getApplicationContext(), "State: " + isChecked, Toast.LENGTH_SHORT).show();
+
             }
         });
         return true;

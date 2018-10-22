@@ -36,7 +36,7 @@ public class NewDeviceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_device);
-        mContext = NewDeviceActivity.this;
+        mContext = getApplicationContext();
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         searchLayout = (RelativeLayout) findViewById(R.id.searchLayout);
@@ -48,15 +48,15 @@ public class NewDeviceActivity extends AppCompatActivity {
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "Search", Toast.LENGTH_SHORT).show();
+
             }
         });
         deviceReyclerView = (RecyclerView) findViewById(R.id.device_recyclerview);
         deviceReyclerView.setItemAnimator(new DefaultItemAnimator());
         deviceReyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter multiAdapter = new MultiAdapter(mContext, 1);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.search_device_cardview_margin);
+        MultiAdapter multiAdapter = new MultiAdapter(mContext, 9);
         deviceReyclerView.setAdapter(multiAdapter);
         deviceReyclerView.addItemDecoration(itemDecoration);
 

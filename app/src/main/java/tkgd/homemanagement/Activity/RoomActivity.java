@@ -79,13 +79,13 @@ public class RoomActivity extends AppCompatActivity {
         devices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RoomActivity.this, "Devices clicked", Toast.LENGTH_SHORT).show();
+
             }
         });
         manage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RoomActivity.this, "Manage clicked", Toast.LENGTH_SHORT).show();
+
             }
         });
         deviceReyclerView = (RecyclerView) findViewById(R.id.device_recyclerview);
@@ -96,6 +96,7 @@ public class RoomActivity extends AppCompatActivity {
         MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 1);
         deviceReyclerView.setAdapter(multiAdapter);
         deviceReyclerView.addItemDecoration(itemDecoration);
+
         Bundle extras = getIntent().getExtras();
 
         rooms = new ArrayList<>();
@@ -148,7 +149,7 @@ public class RoomActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Toast.makeText(RoomActivity.this, "Page selected: " + position, Toast.LENGTH_SHORT).show();
+
                 if (position == rooms.size()) {
                     collapsingToolbarLayout.setTitle(" New room");
                     deviceReyclerView.setAdapter(new RecyclerView.Adapter() {
@@ -209,7 +210,7 @@ public class RoomActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_notification:
                 textBadge.setVisibility(View.VISIBLE);
-                Toast.makeText(RoomActivity.this, "Notification clicked", Toast.LENGTH_SHORT).show();
+
                 break;
             default:
                 break;
