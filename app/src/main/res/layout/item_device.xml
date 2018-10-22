@@ -60,7 +60,6 @@
             android:layout_margin="20dp"
             android:minHeight="100dp"
             android:padding="10dp"
-            android:src="@drawable/ic_launcher_foreground"
             android:visibility="visible" />
 
         <ViewStub
