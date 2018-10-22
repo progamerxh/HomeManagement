@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:padding="25dp"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:padding="5dp"
+            android:src="@drawable/lightbulb" />
+
+        <TextView
+            android:id="@+id/txtLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="25%"
+            android:textColor="@color/text"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <tkgd.homemanagement.Utility.CircularSeekBar
+        android:id="@+id/circularSeekBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:circle_color="@color/dark_grey"
+        app:circle_progress_color="@color/text"
+        app:circle_x_radius="500dp"
+        app:circle_y_radius="500dp"
+        app:end_angle="90"
+        app:max="100"
+        app:pointer_radius="1dp"
+        app:pointer_alpha_ontouch="255"
+        app:pointer_color="@color/text"
+        app:pointer_halo_color="@color/text"
+        app:progress="25"
+        app:start_angle="90"
+        app:use_custom_radii="true" />
+
+</RelativeLayout>

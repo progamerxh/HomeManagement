@@ -16,6 +16,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -24,7 +25,15 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import tkgd.homemanagement.Activity.DeviceActivity;
 import tkgd.homemanagement.Activity.NewDeviceActivity;
@@ -46,11 +55,12 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
     private int[] colors = {android.R.color.white, R.color.pastel_1, R.color.pastel_2, R.color.pastel_3, R.color.pastel_4, R.color.light_blue, R.color.light_green};
     private String[] sockets = {"Wifi", "TV", "Fan", "Xaomi"};
     private String[] lights = {"All", "Light 1", "Light 2"};
-    private String[] acmodes = {"Auto", "Cold", "Heat" ,"Dry" , "Fan"};
-    private int[] acmodeicons = {R.drawable.autorenew, R.drawable.frozen, R.drawable.sunny,R.drawable.water,R.drawable.fan};
-    private int[] deviceicons = {R.drawable.lightbulb, R.drawable.air_conditioner, R.drawable.socket_slected, R.drawable.wifi, R.drawable.cctv};
-    private String[] prop1 ={"","Fan", "Normal", "↓ 22.11 gb", "Normal"};
-    private String[] prop2 ={"","Cold", "", "↑ 11.22 gb", "Alert"};
+    private String[] acmodes = {"Auto", "Cold", "Heat", "Dry", "Fan"};
+    private int[] minilayouts = {R.layout.mini_device_light, R.layout.mini_device_climate, R.layout.mini_device_electricity, R.layout.mini_device_wifi, R.layout.mini_device_camera};
+    private int[] acmodeicons = {R.drawable.autorenew, R.drawable.frozen, R.drawable.sunny, R.drawable.water, R.drawable.fan};
+    private int[] deviceicons = {R.drawable.lightbulb, R.drawable.air_conditioner, R.drawable.socket_selected, R.drawable.wifi, R.drawable.cctv};
+    private String[] prop1 = {"", "Fan on", "Normal", "↓ 22.11 gb", "Normal"};
+    private String[] prop2 = {"", "Cold", "", "↑ 11.22 gb", "Alert"};
     private Context context;
     private int mtype;
 
@@ -167,9 +177,66 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                 DeviceViewHolder deviceViewHolder = (DeviceViewHolder) holder;
                 deviceViewHolder.txtDeviceName.setText(devices.get(position));
                 deviceViewHolder.imgDeviceIcon.setImageResource(deviceicons[position]);
+                if (context == NewDeviceActivity.mContext)
+                    return;
+                deviceViewHolder.imgDeviceIcon.setVisibility(View.GONE);
                 deviceViewHolder.imgState.setBackgroundResource(deviceicons[position]);
                 deviceViewHolder.txtProp1.setText(prop1[position]);
                 deviceViewHolder.txtProp2.setText(prop2[position]);
+                deviceViewHolder.layoutMini.setLayoutResource(minilayouts[position]);
+                View inflatedView = deviceViewHolder.layoutMini.inflate();
+                if (position == 3) {
+                    LineChart chartUsage = (LineChart) inflatedView.findViewById(R.id.chartUsage);
+                    int downloads[][] = {{1, 22}, {2, 35}, {3, 21}, {4, 37}, {5, 42}, {6, 11}, {7, 23}, {8, 47}};
+                    int uploads[][] = {{1, 33}, {2, 21}, {3, 41}, {4, 27}, {5, 33}, {6, 25}, {7, 22}, {8, 37}};
+                    List<Entry> entries1 = new ArrayList<Entry>();
+                    List<Entry> entries2 = new ArrayList<Entry>();
+                    for (int download[] : downloads) {
+                        entries1.add(new Entry(download[0], download[1]));
+                    }
+                    for (int upload[] : uploads) {
+                        entries2.add(new Entry(upload[0], upload[1]));
+                    }
+                    LineDataSet downloadSet = new LineDataSet(entries1, "Download");
+                    downloadSet.setColor(context.getColor(R.color.light_green));
+                    downloadSet.setDrawCircles(false);
+                    downloadSet.setDrawCircleHole(false);
+                    downloadSet.setDrawValues(false);
+                    downloadSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
+                    LineDataSet uploadSet = new LineDataSet(entries2, "Upload");
+                    uploadSet.setColor(Color.WHITE);
+                    uploadSet.setDrawCircles(false);
+                    uploadSet.setDrawCircleHole(false);
+                    uploadSet.setDrawValues(false);
+                    uploadSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
+                    LineData lineData = new LineData();
+                    lineData.addDataSet(downloadSet);
+                    lineData.addDataSet(uploadSet);
+                    chartUsage.setData(lineData);
+                    XAxis xAxis = chartUsage.getXAxis();
+                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                    xAxis.setTextColor(Color.WHITE);
+                    xAxis.setDrawAxisLine(true);
+                    xAxis.setDrawLabels(false);
+                    xAxis.setTextSize(10f);
+                    xAxis.setGridColor(context.getColor(R.color.dark_grey));
+                    YAxis yAxisRight = chartUsage.getAxisRight();
+                    yAxisRight.setEnabled(false);
+                    YAxis yAxisLeft = chartUsage.getAxisLeft();
+                    yAxisLeft.setAxisMinValue(0);
+                    yAxisLeft.setSpaceTop(30);
+                    yAxisLeft.setTextColor(Color.WHITE);
+                    yAxisLeft.setTextSize(10);
+                    yAxisLeft.setGridColor(context.getColor(R.color.dark_grey));
+                    chartUsage.getDescription().setEnabled(false);
+                    chartUsage.setNoDataText("No electricity consumed today!");
+                    chartUsage.getLegend().setEnabled(false);
+                    chartUsage.setHighlightPerTapEnabled(false);
+                    chartUsage.setTouchEnabled(false);
+                    chartUsage.invalidate(); // refresh
+                }
                 break;
             case 2:
                 if (position == scenarioItems.size())
@@ -380,13 +447,16 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         private ImageView imgState;
         private TextView txtProp1;
         private TextView txtProp2;
+        private ViewStub layoutMini;
+
         public DeviceViewHolder(View itemView) {
             super(itemView);
             txtDeviceName = (TextView) itemView.findViewById(R.id.txtDeviceName);
             imgDeviceIcon = (ImageView) itemView.findViewById(R.id.imgDeviceIcon);
-            imgState= (ImageView) itemView.findViewById(R.id.imgState);
+            imgState = (ImageView) itemView.findViewById(R.id.imgState);
             txtProp1 = (TextView) itemView.findViewById(R.id.txtProp1);
             txtProp2 = (TextView) itemView.findViewById(R.id.txtProp2);
+            layoutMini = (ViewStub) itemView.findViewById(R.id.layoutMini);
             if (mtype == MyDefinition.ADAPTER_DEVICE) {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -493,11 +563,9 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                             @Override
                             public void onClick(View v) {
                                 managedialog.hide();
-                                Intent intent = new Intent(context,NewScenarioActivity.class);
+                                Intent intent = new Intent(context, NewScenarioActivity.class);
                                 intent.putExtra("SCENARIO_NAME", scenarioItems.get(getAdapterPosition()).getName());
                                 context.startActivity(intent);
-
-
                             }
                         });
                         Delete.setOnClickListener(new View.OnClickListener() {
@@ -627,6 +695,55 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
                     }
                 }
             });
+            if (getAdapterPosition() < systems.size())
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        final BottomSheetDialog managedialog = new BottomSheetDialog(context);
+                        managedialog.setContentView(R.layout.bottomsheet_dialog);
+                        final BottomSheetDialog undodialog = new BottomSheetDialog(context);
+                        undodialog.setContentView(R.layout.undo_dialog);
+                        LinearLayout Edit = (LinearLayout) managedialog.findViewById(R.id.Edit);
+                        LinearLayout Delete = (LinearLayout) managedialog.findViewById(R.id.Delete);
+                        LinearLayout Share = (LinearLayout) managedialog.findViewById(R.id.Share);
+                        Share.setVisibility(View.VISIBLE);
+                        View view = ((Activity) context).findViewById(R.id.layoutProfile);
+                        final Snackbar snackbar = Snackbar.make(view, "System " + systems.get(getAdapterPosition()).getName() + " is deleted", Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                snackbar.dismiss();
+                            }
+                        });
+
+                        Edit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                managedialog.hide();
+                                Intent myIntent = new Intent(context, NewRoomActivity.class);
+                                myIntent.putExtra("TYPE", "SYSTEM");
+                                myIntent.putExtra("NAME", systems.get(getAdapterPosition()).getName());
+                                context.startActivity(myIntent);
+                            }
+                        });
+                        Share.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                managedialog.hide();
+
+                            }
+                        });
+                        Delete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                managedialog.hide();
+                                snackbar.show();
+                            }
+                        });
+                        managedialog.show();
+                        return true;
+                    }
+                });
         }
     }
 }

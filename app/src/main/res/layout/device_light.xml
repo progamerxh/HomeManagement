@@ -54,7 +54,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
                 android:text="Your atmosphere"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="24sp" />
 
             <TextView
@@ -88,7 +88,7 @@
                 android:layout_margin="5dp"
                 android:gravity="center"
                 android:text="100%"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="30sp" />
 
             <TextView

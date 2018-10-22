@@ -20,6 +20,7 @@ public class NewRoomActivity extends AppCompatActivity {
     private ImageView imgPhoto;
     private Button btnDone;
     private String type;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +37,24 @@ public class NewRoomActivity extends AppCompatActivity {
         btnDone = (Button) findViewById(R.id.btnDone);
         final Bundle extras = getIntent().getExtras();
         type = extras.getString("TYPE");
+        name = extras.getString("NAME");
         toolbar.setTitleTextColor(Color.WHITE);
         if (type.equals("ROOM")) {
-            actionBar.setTitle("New room");
-            txtRoomName.setHint("Room name");
+            if (name == null) {
+                actionBar.setTitle("New room");
+                txtRoomName.setHint("Room name");
+            } else {
+                actionBar.setTitle(name);
+                txtRoomName.setHint(name);
+            }
         } else {
-            actionBar.setTitle("New system");
-            txtRoomName.setHint("System name");
+            if (name == null) {
+                actionBar.setTitle("New system");
+                txtRoomName.setHint("System name");
+            } else {
+                actionBar.setTitle(name);
+                txtRoomName.setHint(name);
+            }
         }
 
         btnAdd.setOnClickListener(new View.OnClickListener() {

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutScenario"
+    android:id="@+id/layoutProfile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_grey"
@@ -50,7 +50,7 @@
             android:shadowDy="2"
             android:shadowRadius="10"
             android:text="Ku Hiệp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="34sp" />
     </FrameLayout>
 

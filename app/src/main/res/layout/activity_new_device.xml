@@ -28,7 +28,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="Search"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="40sp"
                 app:layout_collapseMode="parallax" />
 
@@ -68,7 +68,7 @@
                     android:padding="10dp"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text"
                     android:textColorHighlight="@color/light_grey"
                     android:textCursorDrawable="@null"
                     android:textSize="20sp" />

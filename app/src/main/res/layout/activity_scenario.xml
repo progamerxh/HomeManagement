@@ -52,7 +52,7 @@
                 android:shadowDy="2"
                 android:shadowRadius="10"
                 android:text="Welcome home.\nKu Hiệp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="40sp" />
 
             <LinearLayout
@@ -83,7 +83,7 @@
                     android:shadowDy="5"
                     android:shadowRadius="10"
                     android:text="Connection established."
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/text" />
 
             </LinearLayout>
             <TextView
@@ -94,7 +94,7 @@
                 android:text="Rooms ›"
                 android:textSize="20sp"
                 android:padding="5dp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:background="@drawable/round_corner_background"
                 android:backgroundTint="#5000"
                 />
@@ -127,7 +127,7 @@
                 android:background="@android:color/transparent"
                 android:src="@drawable/expand_button"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -162,7 +162,7 @@
             android:gravity="start"
             android:text="Need help?"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="16sp" />
 
         <Button
@@ -175,7 +175,7 @@
             android:gravity="end"
             android:text="Customize ›"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

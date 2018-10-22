@@ -24,7 +24,7 @@ import tkgd.homemanagement.R;
 import tkgd.homemanagement.Utility.ItemOffsetDecoration;
 
 public class NewDeviceActivity extends AppCompatActivity {
-    static Context mContext;
+    public static Context mContext;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private RelativeLayout searchLayout;

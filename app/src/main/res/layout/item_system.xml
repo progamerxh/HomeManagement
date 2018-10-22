@@ -18,14 +18,14 @@
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
             android:paddingTop="5dp"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:text="System 1"
             android:textSize="16sp" />
         <TextView
             android:id="@+id/txtRoomCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:paddingStart="10dp"
             android:text="4 rooms"
             android:paddingBottom="5dp"

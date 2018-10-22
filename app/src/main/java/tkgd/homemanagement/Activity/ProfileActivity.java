@@ -34,7 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
         systemrecycler.setLayoutManager(layoutManagerScenarios);
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter multiAdapter = new MultiAdapter(getApplicationContext(), 8);
+        MultiAdapter multiAdapter = new MultiAdapter(ProfileActivity.this, 8);
         systemrecycler.setAdapter(multiAdapter);
         systemrecycler.addItemDecoration(itemDecoration);
 

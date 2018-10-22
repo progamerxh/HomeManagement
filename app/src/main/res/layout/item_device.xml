@@ -6,10 +6,11 @@
     app:cardCornerRadius="5dp">
 
     <RelativeLayout
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
         android:layout_width="wrap_content"
-        android:background="@drawable/background_gradient"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:background="@drawable/background_gradient">
 
         <TextView
             android:id="@+id/txtDeviceName"
@@ -17,8 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:paddingStart="5dp"
             android:text="Device"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/text" />
 
         <TextView
             android:id="@+id/txtProp1"
@@ -26,9 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:text="prop1"
-            android:textSize="12sp"
-            android:textColor="@color/light_green" />
+            android:paddingStart="5dp"
+            android:textColor="@color/light_green"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/txtProp2"
@@ -36,9 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:text="prop2"
-            android:textSize="12sp"
-            android:textColor="@color/light_green" />
+            android:paddingEnd="5dp"
+            android:textColor="@color/light_green"
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/imgState"
@@ -48,17 +50,27 @@
             android:layout_alignParentEnd="true"
             android:backgroundTint="@color/light_green"
             android:backgroundTintMode="src_atop"
-            android:background="@drawable/power" />
+            android:paddingEnd="5dp" />
 
         <ImageView
             android:id="@+id/imgDeviceIcon"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
             android:minHeight="100dp"
             android:padding="10dp"
-            android:layout_margin="20dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:visibility="visible" />
+
+        <ViewStub
+            android:id="@+id/layoutMini"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="invisible"></ViewStub>
 
     </RelativeLayout>
 

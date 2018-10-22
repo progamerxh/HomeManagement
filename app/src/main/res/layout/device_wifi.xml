@@ -38,7 +38,7 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:text="Total Speed"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="16sp" />
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:text="96.69 mbps"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="30sp" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_alignParentEnd="true"
             android:layout_gravity="left"
             android:text="Today"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="16sp" />
 
         <TextView
@@ -82,7 +82,7 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:text="↑ 11.22 gb"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text"
             android:textSize="20sp" />
 
     </RelativeLayout>
@@ -117,7 +117,7 @@
                 android:layout_gravity="left"
                 android:gravity="center"
                 android:text="IP Address"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="16sp" />
 
             <TextView
@@ -126,7 +126,7 @@
                 android:layout_gravity="end"
                 android:gravity="right"
                 android:text="192.168.211.122"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="24sp" />
         </LinearLayout>
 
@@ -142,7 +142,7 @@
                 android:layout_gravity="left"
                 android:gravity="center"
                 android:text="Control speed"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="16sp" />
 
             <TextView
@@ -152,7 +152,7 @@
                 android:layout_gravity="end"
                 android:gravity="right"
                 android:text="96.69 mbps"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text"
                 android:textSize="24sp" />
 
 
