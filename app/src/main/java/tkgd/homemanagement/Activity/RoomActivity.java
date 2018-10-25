@@ -16,15 +16,19 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import tkgd.homemanagement.Adapter.MultiAdapter;
@@ -93,9 +97,54 @@ public class RoomActivity extends AppCompatActivity {
         deviceReyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 1);
+        final MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 1);
         deviceReyclerView.setAdapter(multiAdapter);
         deviceReyclerView.addItemDecoration(itemDecoration);
+        ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                // We only want the active item
+
+                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+                    if ( viewHolder.getAdapterPosition() ==  multiAdapter.devices.size())
+                        return ;
+                    viewHolder.itemView.findViewById(R.id.wrapLayout).setBackgroundColor(getColor(R.color.light_grey));
+                }
+                super.onSelectedChanged(viewHolder, actionState);
+
+            }
+            @Override
+            public void clearView(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder) {
+                if ( viewHolder.getAdapterPosition() ==  multiAdapter.devices.size())
+                    return ;
+                super.clearView(recyclerView, viewHolder);
+
+                viewHolder.itemView.findViewById(R.id.wrapLayout).setBackground(getDrawable(R.drawable.background_gradient));
+            }
+
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                if (target.getAdapterPosition() == multiAdapter.devices.size() || viewHolder.getAdapterPosition() ==  multiAdapter.devices.size())
+                    return true;
+                Collections.swap(multiAdapter.devices, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                multiAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //TODO
+            }
+
+            //defines the enabled move directions in each state (idle, swiping, dragging).
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+            }
+        };
+        ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
+        ith.attachToRecyclerView(deviceReyclerView);
 
         Bundle extras = getIntent().getExtras();
 

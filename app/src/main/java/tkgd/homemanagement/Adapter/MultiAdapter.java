@@ -48,7 +48,7 @@ import tkgd.homemanagement.Utility.MyDefinition;
 
 public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder> {
     private int selectedPosition = -1;
-    private ArrayList<String> devices;
+    public ArrayList<String> devices;
     private ArrayList<ScenarioItem> scenarioItems;
     private ArrayList<Notification> notifications;
     private ArrayList<System> systems;
@@ -84,12 +84,11 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         scenarioItems.add(new ScenarioItem("I'm at home", false));
         scenarioItems.add(new ScenarioItem("Go to work", false));
         scenarioItems.add(new ScenarioItem("I'm outside", false));
-        notifications.add(0, new Notification(false));
-        notifications.add(0, new Notification(false));
-        notifications.add(0, new Notification(false));
-        notifications.add(0, new Notification(false));
-        notifications.add(0, new Notification(false));
-        notifications.add(0, new Notification(false));
+        notifications.add(0, new Notification( R.drawable.cctv,"Some one ring front door. Open the door?","1 minute",false));
+        notifications.add(0, new Notification( R.drawable.frozen,"The house is getting too cold, please increase temperature!","2 hours",false));
+        notifications.add(0, new Notification( R.drawable.lightbulb,"Lights have been turned on for over 12 hours. Turn off?","4 hours",false));
+        notifications.add(0, new Notification( R.drawable.lightbulb,"Lights have been turned on for over 12 hours. Turn off?","1 day",false));
+        notifications.add(0, new Notification( R.drawable.air_conditioner,"Outside's atmosphere is hot. Turn on AC?","1 day",false));
         devices.add("Light");
         devices.add("Climate");
         devices.add("Electricity");
@@ -255,8 +254,14 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
             case 3:
                 NotificationViewHolder notificationViewHolder = (NotificationViewHolder) holder;
                 Notification notification = notifications.get(position);
+                notificationViewHolder.imgIcon.setImageResource(notification.getIconID());
+                notificationViewHolder.txtContent.setText(notification.getContent());
+                notificationViewHolder.txtTime.setText(notification.getTime());
+
                 if (notification.isSelected()) {
-                    notificationViewHolder.cardview.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dark_grey));
+                    notificationViewHolder.txtContent.setTextColor(context.getColor( R.color.light_grey));
+                    notificationViewHolder.txtTime.setTextColor(context.getColor( R.color.light_grey));
+                    notificationViewHolder.cardview.setCardBackgroundColor(context.getColor( R.color.dark_grey));
                 }
                 break;
             case 4:
@@ -468,44 +473,7 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
 
                     }
                 });
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        final BottomSheetDialog managedialog = new BottomSheetDialog(context);
-                        managedialog.setContentView(R.layout.bottomsheet_dialog);
-                        final BottomSheetDialog undodialog = new BottomSheetDialog(context);
-                        undodialog.setContentView(R.layout.undo_dialog);
-                        LinearLayout Edit = (LinearLayout) managedialog.findViewById(R.id.Edit);
-                        LinearLayout Delete = (LinearLayout) managedialog.findViewById(R.id.Delete);
-                        View view = ((Activity) context).findViewById(R.id.layoutRoom);
-                        final Snackbar snackbar = Snackbar.make(view, "Device " + txtDeviceName.getText() + " is deleted", Snackbar.LENGTH_SHORT);
-                        snackbar.setAction("UNDO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
 
-                                snackbar.dismiss();
-                            }
-                        });
-
-                        Edit.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                managedialog.hide();
-
-                            }
-                        });
-                        Delete.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                managedialog.hide();
-
-                                snackbar.show();
-                            }
-                        });
-                        managedialog.show();
-                        return true;
-                    }
-                });
             }
         }
     }
@@ -586,10 +554,15 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
 
     class NotificationViewHolder extends MyViewHolder {
         private CardView cardview;
-
+        private ImageView imgIcon;
+        private TextView txtContent;
+        private TextView txtTime;
         public NotificationViewHolder(View itemView) {
             super(itemView);
             cardview = (CardView) itemView.findViewById(R.id.card_view);
+            imgIcon = (ImageView) itemView.findViewById(R.id.imgIcon);
+            txtContent = (TextView) itemView.findViewById(R.id.txtContent);
+            txtTime = (TextView) itemView.findViewById(R.id.txtTime);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

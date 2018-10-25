@@ -2,7 +2,6 @@ package tkgd.homemanagement.Activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.UiThread;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
@@ -33,7 +30,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import tkgd.homemanagement.Adapter.MultiAdapter;
 import tkgd.homemanagement.R;
@@ -46,7 +42,7 @@ import static java.lang.Thread.sleep;
 public class DeviceActivity extends AppCompatActivity {
     private String deviceType;
     private int deviceId;
-
+    private String roomname = "Living room";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +87,8 @@ public class DeviceActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(deviceType);
         toolbar.setTitleTextColor(Color.WHITE);
-
+        toolbar.setSubtitle(roomname);
+        toolbar.setSubtitleTextColor(Color.WHITE);
         imgPhoto = (ImageView) findViewById(R.id.imgPhoto);
         RelativeLayout layout_joystick = (RelativeLayout) findViewById(R.id.layout_joystick);
         final JoyStickClass js = new JoyStickClass(getApplicationContext(), layout_joystick, R.drawable.joystick_stick);
@@ -136,6 +133,8 @@ public class DeviceActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(deviceType);
         toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitle(roomname);
+        toolbar.setSubtitleTextColor(Color.WHITE);
 
         chartUsage = (LineChart) findViewById(R.id.chartUsage);
         int downloads[][] = {{1, 22}, {2, 35}, {3, 21}, {4, 37}, {5, 42}, {6, 11}, {7, 23}, {8, 47}};
@@ -223,6 +222,8 @@ public class DeviceActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(deviceType);
         toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitle(roomname);
+        toolbar.setSubtitleTextColor(Color.WHITE);
 
         socketsrecyler = (RecyclerView) findViewById(R.id.sockets_recycleview);
         LinearLayoutManager layoutManagerScenarios = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -283,6 +284,8 @@ public class DeviceActivity extends AppCompatActivity {
         RecyclerView lightsrecycler, colorrecycler;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setSubtitle(roomname);
+        toolbar.setSubtitleTextColor(Color.WHITE);
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -334,6 +337,8 @@ public class DeviceActivity extends AppCompatActivity {
         RecyclerView moderecycler;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setSubtitle(roomname);
+        toolbar.setSubtitleTextColor(Color.WHITE);
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
