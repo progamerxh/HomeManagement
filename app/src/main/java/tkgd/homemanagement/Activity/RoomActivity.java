@@ -21,11 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,13 +43,13 @@ public class RoomActivity extends AppCompatActivity {
     private Button devices, manage;
     private ArrayList<Room> rooms;
     private RecyclerView deviceReyclerView;
+    private MultiAdapter multiAdapter;
     private ViewPager pager;
     private PageAdapter obj_adapter;
+    private ItemTouchHelper ith;
     private String str_device;
     static Context mContext;
     private TextView textBadge;
-    private TextView txtScenario;
-    private int pageselected;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
@@ -97,37 +94,44 @@ public class RoomActivity extends AppCompatActivity {
         deviceReyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.room_device_cardview_margin);
-        final MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 1);
+        multiAdapter = new MultiAdapter(RoomActivity.this, 1);
         deviceReyclerView.setAdapter(multiAdapter);
         deviceReyclerView.addItemDecoration(itemDecoration);
-        ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
+        final ArrayList<String> devices = new ArrayList<>();
+        devices.add("Light");
+        devices.add("Climate");
+        devices.add("Electricity");
+        devices.add("Wifi");
+        devices.add("Camera");
+        final ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
             @Override
             public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
                 // We only want the active item
 
                 if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-                    if ( viewHolder.getAdapterPosition() ==  multiAdapter.devices.size())
-                        return ;
+                    if (viewHolder.getAdapterPosition() == devices.size())
+                        return;
                     viewHolder.itemView.findViewById(R.id.wrapLayout).setBackgroundColor(getColor(R.color.light_grey));
                 }
                 super.onSelectedChanged(viewHolder, actionState);
 
             }
+
             @Override
             public void clearView(RecyclerView recyclerView,
                                   RecyclerView.ViewHolder viewHolder) {
-                if ( viewHolder.getAdapterPosition() ==  multiAdapter.devices.size())
-                    return ;
+                if (viewHolder.getAdapterPosition() == devices.size())
+                    return;
                 super.clearView(recyclerView, viewHolder);
 
                 viewHolder.itemView.findViewById(R.id.wrapLayout).setBackground(getDrawable(R.drawable.background_gradient));
             }
 
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                if (target.getAdapterPosition() == multiAdapter.devices.size() || viewHolder.getAdapterPosition() ==  multiAdapter.devices.size())
+                if (target.getAdapterPosition() == devices.size() || viewHolder.getAdapterPosition() == devices.size())
                     return true;
-                Collections.swap(multiAdapter.devices, viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                multiAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                Collections.swap(devices, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                getCurentAdapter().notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                 return true;
             }
 
@@ -143,7 +147,7 @@ public class RoomActivity extends AppCompatActivity {
                         ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
             }
         };
-        ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
+        ith = new ItemTouchHelper(_ithCallback);
         ith.attachToRecyclerView(deviceReyclerView);
 
         Bundle extras = getIntent().getExtras();
@@ -220,8 +224,9 @@ public class RoomActivity extends AppCompatActivity {
                     });
                 } else {
                     collapsingToolbarLayout.setTitle(rooms.get(position).getName());
-                    MultiAdapter multiAdapter = new MultiAdapter(RoomActivity.this, 1);
+                    multiAdapter = new MultiAdapter(RoomActivity.this, 1);
                     deviceReyclerView.setAdapter(multiAdapter);
+                    ith.attachToRecyclerView(deviceReyclerView);
                 }
 
             }
@@ -232,6 +237,11 @@ public class RoomActivity extends AppCompatActivity {
             }
         });
     }
+
+    private RecyclerView.Adapter getCurentAdapter() {
+        return multiAdapter;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -278,6 +288,8 @@ public class RoomActivity extends AppCompatActivity {
         return fList;
     }
 
+    void ApplyItemTouchCallBack(final MultiAdapter multiAdapter) {
 
+    }
 }
 
