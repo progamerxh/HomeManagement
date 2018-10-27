@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/imgUserPhoto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -41,6 +42,7 @@
 
 
         <TextView
+            android:id="@+id/txtUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -90,10 +92,18 @@
             android:id="@+id/spinLanguage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_background"
             android:layout_margin="10dp"
+            android:background="@drawable/round_corner_background"
             android:spinnerMode="dropdown"></Spinner>
 
+        <TextView
+            android:id="@+id/txtLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:text="Logout"
+            android:textColor="@color/light_grey"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </LinearLayout>

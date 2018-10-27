@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "299995033284",
+    "firebase_url": "https://homemanagement-bc251.firebaseio.com",
+    "project_id": "homemanagement-bc251",
+    "storage_bucket": "homemanagement-bc251.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299995033284:android:3b765fe14b0993e7",
+        "android_client_info": {
+          "package_name": "tkgd.homemanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299995033284-heo34vdtq48e9dg3of0h9sbt9q9sm0gd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJfe6TKiaqn2QT_yfCpxPREDyj3fkI2FM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("tkgd.homemanagerment", appContext.getPackageName());
+        assertEquals("tkgd.homemanagement", appContext.getPackageName());
     }
 }

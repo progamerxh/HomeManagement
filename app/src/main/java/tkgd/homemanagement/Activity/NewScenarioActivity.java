@@ -1,10 +1,12 @@
 package tkgd.homemanagement.Activity;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -64,7 +66,22 @@ public class NewScenarioActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Cancel create new scenario?");
+                builder.setMessage("Are you sure to discard all?");
+                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        onBackPressed();
+                    }
+                });
+                builder.show();
                 return true;
             case R.id.menu_save:
                 finish();

@@ -1,9 +1,11 @@
 package tkgd.homemanagement.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -80,8 +82,28 @@ public class NewRoomActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                if (type.equals("ROOM")) {
+                    builder.setTitle("Cancel create new room?");
+                }
+                else
+                    builder.setTitle("Cancel create new system?");
+                builder.setMessage("Are you sure to discard all?");
+                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        onBackPressed();
+                    }
+                });
+                builder.show();
                 return true;
+            }
             default:
                 break;
         }
