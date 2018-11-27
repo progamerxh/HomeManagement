@@ -19,7 +19,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import tkgd.homemanagement.Adapter.DeviceAdapter;
 import tkgd.homemanagement.Adapter.MultiAdapter;
+import tkgd.homemanagement.Model.Device;
 import tkgd.homemanagement.R;
 import tkgd.homemanagement.Utility.ItemOffsetDecoration;
 
@@ -31,11 +35,14 @@ public class NewDeviceActivity extends AppCompatActivity {
     private RecyclerView deviceReyclerView;
     private EditText txtDevice;
     private ImageView btnScan;
-
+    static public String roomid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_device);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            roomid = extras.getString("roomid");
         mContext = getApplicationContext();
         appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,7 +63,7 @@ public class NewDeviceActivity extends AppCompatActivity {
         deviceReyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.search_device_cardview_margin);
-        MultiAdapter multiAdapter = new MultiAdapter(mContext, 9);
+        DeviceAdapter multiAdapter = new DeviceAdapter(new ArrayList<Device>(),roomid,NewDeviceActivity.this, 0);
         deviceReyclerView.setAdapter(multiAdapter);
         deviceReyclerView.addItemDecoration(itemDecoration);
 

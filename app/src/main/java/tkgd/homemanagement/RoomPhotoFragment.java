@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import tkgd.homemanagement.Activity.NewRoomActivity;
+import tkgd.homemanagement.Activity.RoomActivity;
 
 public class RoomPhotoFragment extends Fragment {
 
@@ -17,16 +18,16 @@ public class RoomPhotoFragment extends Fragment {
     private ImageView iv_image;
     public static final String EXTRA_MESSAGE = "EXTRA_MESSAGE";
     public static final String IMAGE = "EXTRA_IMAGE";
-
-    public static final RoomPhotoFragment newInstance(String roomname, int int_image) {
+    public static final String SYSTEMID = "SYSTEM_ID";
+    public static final RoomPhotoFragment newInstance(String roomname, int int_image, String systemid) {
 
         RoomPhotoFragment f = new RoomPhotoFragment();
 
         Bundle bdl = new Bundle(1);
         bdl.putString(EXTRA_MESSAGE, roomname);
         bdl.putInt(IMAGE, int_image);
+        bdl.putString(SYSTEMID, systemid);
         f.setArguments(bdl);
-
         return f;
 
     }
@@ -34,7 +35,7 @@ public class RoomPhotoFragment extends Fragment {
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        final String systemid = getArguments().getString(SYSTEMID);
         final String message = getArguments().getString(EXTRA_MESSAGE);
         int int_image = getArguments().getInt(IMAGE);
         view = inflater.inflate(R.layout.room_pager_fragment, container, false);
@@ -52,6 +53,7 @@ public class RoomPhotoFragment extends Fragment {
                 if (message == "NEW_ROOM") {
                     Intent intent = new Intent(getContext(), NewRoomActivity.class);
                     intent.putExtra("TYPE", "ROOM");
+                    intent.putExtra("systemid", systemid);
                     startActivity(intent);
                 }
             }

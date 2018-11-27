@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -15,14 +14,24 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import tkgd.homemanagement.Activity.NewScenarioActivity;
+import tkgd.homemanagement.Model.Device;
 import tkgd.homemanagement.R;
 
 public class DeviceScheduleAdapter extends RecyclerView.Adapter<DeviceScheduleAdapter.MyViewHolder> {
     private Context context;
     private int mtype;
-    public ArrayList<String> devices;
-    private int[] deviceicons = {R.drawable.lightbulb, R.drawable.air_conditioner, R.drawable.socket_selected, R.drawable.wifi, R.drawable.cctv};
+    public ArrayList<Device> devices;
+    private Map<String, Integer> deviceicons = new HashMap<>();
+
+    public interface OnStatusChangeListener {
+        void onStatusChange(Device ConfigeDevice);
+    }
+
+    private final OnStatusChangeListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private CardView cardview;
@@ -40,6 +49,7 @@ public class DeviceScheduleAdapter extends RecyclerView.Adapter<DeviceScheduleAd
             txtConfig = (TextView) itemView.findViewById(R.id.txtConfig);
             txtState = (TextView) itemView.findViewById(R.id.txtState);
             imgDeviceIcon = (ImageView) itemView.findViewById(R.id.imgDeviceIcon);
+
             switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -49,8 +59,6 @@ public class DeviceScheduleAdapter extends RecyclerView.Adapter<DeviceScheduleAd
                         txtConfig.setTextColor(Color.WHITE);
                         txtState.setText("Device will turn on");
                         txtState.setTextColor(ContextCompat.getColor(context, R.color.light_green));
-
-
                     } else {
                         txtDevice.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
                         cardview.setCardBackgroundColor(Color.TRANSPARENT);
@@ -58,6 +66,9 @@ public class DeviceScheduleAdapter extends RecyclerView.Adapter<DeviceScheduleAd
                         txtState.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
                         txtConfig.setTextColor(ContextCompat.getColor(context, R.color.light_grey));
                     }
+                    Device device = devices.get(getAdapterPosition());
+                    device.setActive(isChecked);
+                    listener.onStatusChange(devices.get(getAdapterPosition()));
                 }
             });
         }
@@ -65,15 +76,15 @@ public class DeviceScheduleAdapter extends RecyclerView.Adapter<DeviceScheduleAd
     }
 
 
-    public DeviceScheduleAdapter(Context context, int type) {
-        devices = new ArrayList<>();
-        devices.add("Light");
-        devices.add("Climate");
-        devices.add("Electricity");
-        devices.add("Wifi");
-        devices.add("Camera");
+    public DeviceScheduleAdapter(ArrayList<Device> devices, Context context) {
+        deviceicons.put("Light", R.drawable.lightbulb);
+        deviceicons.put("Climate", R.drawable.air_conditioner);
+        deviceicons.put("Electricity", R.drawable.socket_selected);
+        deviceicons.put("Wifi", R.drawable.wifi);
+        deviceicons.put("Camera", R.drawable.cctv);
+        this.listener = NewScenarioActivity.deviceStatusListener;
+        this.devices = devices;
         this.context = context;
-        this.mtype = type;
     }
 
     @Override
@@ -86,8 +97,9 @@ public class DeviceScheduleAdapter extends RecyclerView.Adapter<DeviceScheduleAd
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        holder.txtDevice.setText(devices.get(position));
-        holder.imgDeviceIcon.setImageResource(deviceicons[position]);
+        holder.txtDevice.setText(devices.get(position).getName());
+        holder.imgDeviceIcon.setImageResource(deviceicons.get(devices.get(position).getType()));
+        holder.switchBtn.setChecked( devices.get(position).getActive());
     }
 
     @Override

@@ -19,23 +19,92 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 
 import tkgd.homemanagement.Activity.NewScenarioActivity;
+import tkgd.homemanagement.Activity.ScenarioActivity;
 import tkgd.homemanagement.Model.ScenarioItem;
 import tkgd.homemanagement.R;
-import tkgd.homemanagement.Utility.MyDefinition;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyViewHolder> {
     private Context context;
     private int mtype;
     private ArrayList<ScenarioItem> scenarioItems;
+    private String systemid;
+    private int selectedPosition = -1;
 
+    public String getSystemid() {
+        return systemid;
+    }
+
+    public void setSystemid(String systemid) {
+        this.systemid = systemid;
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        public MyViewHolder(View view) {
+            super(view);
+
+        }
+    }
+
+
+    public CardViewAdapter(ArrayList<ScenarioItem> scenarioItems, Context context, int mtype) {
+        this.scenarioItems = scenarioItems;
+        this.context = context;
+        this.mtype = mtype;
+    }
+
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = null;
+        MyViewHolder viewHolder = null;
+        if (viewType == -1) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.add_item, parent, false);
+            viewHolder = new AddItemViewHolder(view);
+        } else {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_cardview_outline, parent, false);
+
+            viewHolder = new ScenarioViewHolder(view);
+        }
+        return viewHolder;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == scenarioItems.size())
+            return -1;
+        else
+            return mtype;
+    }
+
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
+        if (position == scenarioItems.size())
+            return;
+        ScenarioViewHolder scenarioViewHolder = (ScenarioViewHolder) holder;
+        ScenarioItem scenarioItem = scenarioItems.get(position);
+        scenarioViewHolder.txtName.setText(scenarioItem.getName());
+        if (scenarioItem.isSelected()) {
+            scenarioViewHolder.imgicon.setChecked(true);
+            scenarioViewHolder.frameLayout.setBackgroundResource(R.drawable.background_gradient);
+        } else {
+            scenarioViewHolder.imgicon.setChecked(false);
+            scenarioViewHolder.frameLayout.setBackgroundResource(R.drawable.item_border);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return scenarioItems.size() + 1;
+    }
+
+    public class ScenarioViewHolder extends MyViewHolder {
         private ToggleButton imgicon;
         private FrameLayout frameLayout;
         private TextView txtName;
-        private int selectedPosition = -1;
 
-        public MyViewHolder(View itemView) {
+
+        public ScenarioViewHolder(View itemView) {
             super(itemView);
             imgicon = (ToggleButton) itemView.findViewById(R.id.btnIcon);
             txtName = (TextView) itemView.findViewById(R.id.txtScenarioName);
@@ -60,7 +129,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
 
                 }
             });
-            if (mtype == MyDefinition.ADAPTER_SCENARIO) {
+            if (mtype == 1) {
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
@@ -84,7 +153,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
                             public void onClick(View v) {
                                 managedialog.hide();
                                 Intent intent = new Intent(context, NewScenarioActivity.class);
+                                intent.putExtra("systemid", ScenarioActivity.systemid);
                                 intent.putExtra("SCENARIO_NAME", scenarioItems.get(getAdapterPosition()).getName());
+                                intent.putExtra("SCENARIO_ID", scenarioItems.get(getAdapterPosition()).getId());
                                 context.startActivity(intent);
                             }
                         });
@@ -138,52 +209,10 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.MyView
                 @Override
                 public void onClick(View v) {
                     Intent myIntent = new Intent(context, NewScenarioActivity.class);
+                    myIntent.putExtra("systemid", ScenarioActivity.systemid);
                     context.startActivity(myIntent);
                 }
             });
         }
     }
-
-    public CardViewAdapter(Context context, int mtype) {
-        scenarioItems = new ArrayList<>();
-        scenarioItems.add(new ScenarioItem("I'm at home", false));
-        scenarioItems.add(new ScenarioItem("Go to work", false));
-        scenarioItems.add(new ScenarioItem("I'm outside", false));
-        this.context = context;
-        this.mtype = mtype;
-    }
-
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (mtype == -1) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.add_item, parent, false);
-            return new AddItemViewHolder(itemView);
-        }
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_cardview_outline, parent, false);
-
-        return new MyViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        if (position == scenarioItems.size())
-            return;
-        ScenarioItem scenarioItem = scenarioItems.get(position);
-        holder.txtName.setText(scenarioItem.getName());
-        if (scenarioItem.isSelected()) {
-            holder.imgicon.setChecked(true);
-            holder.frameLayout.setBackgroundResource(R.drawable.background_gradient);
-        } else {
-            holder.imgicon.setChecked(false);
-            holder.frameLayout.setBackgroundResource(R.drawable.item_border);
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return scenarioItems.size() + 1;
-    }
-
 }

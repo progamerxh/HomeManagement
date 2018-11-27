@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "tkgd.homemanagement"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -42,5 +42,9 @@ dependencies {
 
     //Git
     implementation 'com.github.bumptech.glide:glide:4.0.0'
+    implementation 'io.supercharge:shimmerlayout:1.1.0'
+
+    //Play
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

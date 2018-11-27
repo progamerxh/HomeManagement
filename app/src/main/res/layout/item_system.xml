@@ -19,7 +19,7 @@
             android:paddingStart="10dp"
             android:paddingTop="5dp"
             android:textColor="@color/text"
-            android:text="System 1"
+            android:text=""
             android:textSize="16sp" />
         <TextView
             android:id="@+id/txtRoomCount"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text"
             android:paddingStart="10dp"
-            android:text="4 rooms"
+            android:text=""
             android:paddingBottom="5dp"
             android:textSize="14sp" />
 

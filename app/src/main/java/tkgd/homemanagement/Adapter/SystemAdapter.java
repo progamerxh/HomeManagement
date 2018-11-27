@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import tkgd.homemanagement.Activity.NewRoomActivity;
+import tkgd.homemanagement.Activity.ScenarioActivity;
 import tkgd.homemanagement.Model.System;
 import tkgd.homemanagement.R;
 
@@ -42,6 +43,13 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.MyViewHold
                         myIntent.putExtra("TYPE", "SYSTEM");
                         context.startActivity(myIntent);
                     }
+                    else
+                    {
+                        Intent myIntent = new Intent(context, ScenarioActivity.class);
+                        myIntent.putExtra("systemid", systems.get(getAdapterPosition()).getId());
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        context.startActivity(myIntent);
+                    }
                 }
             });
             if (getAdapterPosition() < systems.size())
@@ -50,8 +58,6 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.MyViewHold
                     public boolean onLongClick(View v) {
                         final BottomSheetDialog managedialog = new BottomSheetDialog(context);
                         managedialog.setContentView(R.layout.bottomsheet_dialog);
-                        final BottomSheetDialog undodialog = new BottomSheetDialog(context);
-                        undodialog.setContentView(R.layout.undo_dialog);
                         LinearLayout Edit = (LinearLayout) managedialog.findViewById(R.id.Edit);
                         LinearLayout Delete = (LinearLayout) managedialog.findViewById(R.id.Delete);
                         LinearLayout Share = (LinearLayout) managedialog.findViewById(R.id.Share);
@@ -97,9 +103,8 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.MyViewHold
     }
 
 
-    public SystemAdapter(Context context, int type) {
-        systems.add(new System("My house", R.drawable.kitchen));
-        systems.add(new System("Son's house", R.drawable.livingroom));
+    public SystemAdapter(ArrayList<System> systems,Context context, int type) {
+        this.systems = systems;
         this.context = context;
         this.mtype = type;
     }
@@ -119,8 +124,10 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.MyViewHold
             holder.imgPhoto.setImageResource(R.drawable.plus_circle_outline);
             holder.txtRoomCount.setText("");
         } else {
-            holder.txtSystem.setText(systems.get(position).getName());
-            holder.imgPhoto.setImageResource(systems.get(position).getPhotoID());
+            System system = systems.get(position);
+            holder.txtRoomCount.setText(Integer.toString(system.getRoomcount()) + " room");
+            holder.txtSystem.setText(system.getName());
+            holder.imgPhoto.setImageResource(system.getPhotoID());
         }
     }
 

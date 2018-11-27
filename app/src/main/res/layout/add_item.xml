@@ -12,6 +12,7 @@
         android:id="@+id/frameBackGround"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:minHeight="150dp"
         android:background="@drawable/item_border"
         android:padding="20dp">
 

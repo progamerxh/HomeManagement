@@ -1,10 +1,18 @@
 package tkgd.homemanagement.Model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class System {
-    private String Name;
+    @SerializedName("name")
+    private String name;
+    @SerializedName("photoUrl")
     private int photoID;
+    @SerializedName("roomcount")
+    private int roomcount;
+    @SerializedName("id")
+    private String id;
     private ArrayList<Room> rooms;
 
     public System() {
@@ -12,8 +20,9 @@ public class System {
 
     ;
 
-    public System(String name, int photoID) {
-        this.Name = name;
+    public System(String name, int roomcount,int photoID) {
+        this.name = name;
+        this.roomcount = roomcount;
         rooms = new ArrayList<>();
         this.photoID = photoID;
     }
@@ -21,15 +30,34 @@ public class System {
     ;
 
     public System(String name, ArrayList<Room> rooms) {
-        this.Name = name;
+        this.name = name;
         this.rooms = rooms;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public int getPhotoID() {
         return photoID;
+    }
+
+    public int getRoomcount() {
+        return roomcount;
+    }
+
+    public void setRoomcount(int roomcount) {
+        this.roomcount = roomcount;
+    }
+    public void setPhotoID(int photoID) {
+        this.photoID = photoID;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

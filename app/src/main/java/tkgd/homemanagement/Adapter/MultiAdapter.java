@@ -79,8 +79,6 @@ public class MultiAdapter extends RecyclerView.Adapter<MultiAdapter.MyViewHolder
         scenarioItems = new ArrayList<>();
         devices = new ArrayList<>();
         notifications = new ArrayList<>();
-        systems.add(new System("My house", R.drawable.kitchen));
-        systems.add(new System("Son's house", R.drawable.livingroom));
         scenarioItems.add(new ScenarioItem("I'm at home", false));
         scenarioItems.add(new ScenarioItem("Go to work", false));
         scenarioItems.add(new ScenarioItem("I'm outside", false));

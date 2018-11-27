@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
             android:padding="10dp"
-            android:text="I'm\nat home"
+            android:text=""
             android:textColor="@color/text" />
 
     </FrameLayout>
