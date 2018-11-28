@@ -47,6 +47,7 @@ public class SystemAdapter extends RecyclerView.Adapter<SystemAdapter.MyViewHold
                     {
                         Intent myIntent = new Intent(context, ScenarioActivity.class);
                         myIntent.putExtra("systemid", systems.get(getAdapterPosition()).getId());
+                        myIntent.putExtra("systemname", systems.get(getAdapterPosition()).getName());
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         context.startActivity(myIntent);
                     }

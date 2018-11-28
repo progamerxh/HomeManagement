@@ -15,8 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 import tkgd.homemanagement.Adapter.CardViewAdapter;
 import tkgd.homemanagement.Model.ScenarioItem;
+import tkgd.homemanagement.Model.System;
 import tkgd.homemanagement.R;
 import tkgd.homemanagement.Utility.ItemOffsetDecoration;
 
@@ -39,13 +42,22 @@ public class ScenarioActivity extends AppCompatActivity {
     private RecyclerView scenariorecycleview;
     static Context mContext;
     private ImageButton btnExpand;
+    private TextView txtGreeting;
+    private ImageView imgSystemPhoto;
     private FrameLayout roomsnav;
+    private TextView txtRooms;
+    private Button btnGo;
+    private View mProgressView;
+    private View mMainView;
+    private View connectionStatus;
+    private View scenarioNavigation;
+    private View createFirstSystem;
     static public String systemid;
     private ShimmerLayout shimmerLayout;
     private FirebaseFirestore firebaseFirestore;
     private ArrayList<ScenarioItem> finalScenarioItems;
     private FirebaseUser user;
-
+    private Boolean isEmptySystem = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +72,30 @@ public class ScenarioActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.account_outline));
 
         roomsnav = (FrameLayout) findViewById(R.id.roomFrame);
-
-
+        mProgressView = (View) findViewById(R.id.progress_bar);
+        mMainView = (View) findViewById(R.id.main_layout);
+        mProgressView.setVisibility(View.VISIBLE);
+        mMainView.setVisibility(View.GONE);
         shimmerLayout = findViewById(R.id.shimmer_layout);
         shimmerLayout.startShimmerAnimation();
         shimmerLayout.setVisibility(View.VISIBLE);
+
+        txtGreeting = (TextView) findViewById(R.id.txtGreeting);
+        imgSystemPhoto = (ImageView) findViewById(R.id.imgSystemPhoto);
+        connectionStatus = (View) findViewById(R.id.connection_status);
+        txtRooms = (TextView) findViewById(R.id.txtRooms);
+        scenarioNavigation = (View) findViewById(R.id.ScenarioNavigation);
+        createFirstSystem = (View) findViewById(R.id.createFirstSystem);
+        btnGo = (Button) findViewById(R.id.btnGo);
+        btnGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(ScenarioActivity.this, NewRoomActivity.class);
+                myIntent.putExtra("TYPE", "SYSTEM");
+                startActivity(myIntent);
+            }
+        });
+
         scenariorecycleview = (RecyclerView) findViewById(R.id.scenario_recycleview);
         final LinearLayoutManager layoutManagerScenarios = new LinearLayoutManager(ScenarioActivity.this, LinearLayoutManager.HORIZONTAL, false);
         scenariorecycleview.setItemAnimator(new DefaultItemAnimator());
@@ -75,7 +106,11 @@ public class ScenarioActivity extends AppCompatActivity {
         finalScenarioItems = new ArrayList<>(0);
         firebaseFirestore = FirebaseFirestore.getInstance();
         final Bundle extras = getIntent().getExtras();
+        Log.d("UserID", "UserID: " + user.getUid());
+
         if (extras != null) {
+            isEmptySystem = false;
+            String systemname = extras.getString("systemname");
             systemid = extras.getString("systemid");
             roomsnav.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,6 +120,10 @@ public class ScenarioActivity extends AppCompatActivity {
                     startActivity(myIntent);
                 }
             });
+            mProgressView.setVisibility(View.GONE);
+            mMainView.setVisibility(View.VISIBLE);
+            showFirstSystem(false);
+            txtGreeting.setText("Welcome " + systemname + "\n" + user.getDisplayName());
             FetchScenarios();
         } else
             FetchSystemId();
@@ -101,7 +140,6 @@ public class ScenarioActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     public void FetchScenarios() {
@@ -145,8 +183,13 @@ public class ScenarioActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            mProgressView.setVisibility(View.GONE);
+                            mMainView.setVisibility(View.VISIBLE);
                             if (task.getResult().size() != 0) {
-                                systemid = task.getResult().getDocuments().get(0).getId();
+                                final System system = task.getResult().getDocuments().get(0).toObject(System.class);
+                                system.setId(task.getResult().getDocuments().get(0).getId());
+                                systemid = system.getId();
+                                Log.d("systemid", "onComplete: " + system.getId());
                                 roomsnav.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -155,12 +198,17 @@ public class ScenarioActivity extends AppCompatActivity {
                                         startActivity(myIntent);
                                     }
                                 });
+                                showFirstSystem(false);
                                 FetchScenarios();
+                                isEmptySystem = false;
+                                txtGreeting.setText("Welcome " + system.getName() + "\n" + user.getDisplayName());
+                                imgSystemPhoto.setBackground(getDrawable(R.drawable.kitchen));
                             } else {
-                                CardViewAdapter scenarioAdapter = new CardViewAdapter(finalScenarioItems, ScenarioActivity.this, 1);
-                                scenariorecycleview.setAdapter(scenarioAdapter);
+                                isEmptySystem = true;
+                                showFirstSystem(true);
+                                txtGreeting.setText("Welcome to Home+\n" + user.getDisplayName());
+                                imgSystemPhoto.setBackgroundResource(R.drawable.background_gradient);
                                 shimmerLayout.setVisibility(View.GONE);
-                                scenariorecycleview.setVisibility(View.VISIBLE);
                             }
                         } else {
                             Log.d("Firebase", "Error getting system: ", task.getException());
@@ -168,6 +216,23 @@ public class ScenarioActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+    void showFirstSystem(Boolean isEmptySystem)
+    {
+        if (isEmptySystem)
+        {
+            connectionStatus.setVisibility(View.GONE);
+            txtRooms.setVisibility(View.GONE);
+            scenarioNavigation.setVisibility(View.GONE);
+            createFirstSystem.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            connectionStatus.setVisibility(View.VISIBLE);
+            txtRooms.setVisibility(View.VISIBLE);
+            scenarioNavigation.setVisibility(View.VISIBLE);
+            createFirstSystem.setVisibility(View.GONE);
+        }
     }
 
     @Override

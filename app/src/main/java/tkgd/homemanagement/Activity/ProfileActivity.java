@@ -44,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     GoogleApiClient mGoogleApiClient;
     private ArrayList<System> systems;
     private ShimmerLayout shimmerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +63,16 @@ public class ProfileActivity extends AppCompatActivity {
         txtUsername = (TextView) findViewById(R.id.txtUsername);
         imgUserphoto = (ImageView) findViewById(R.id.imgUserPhoto);
         txtLogout = (TextView) findViewById(R.id.txtLogout);
+        Log.d("Username", "Username: " + user.getDisplayName());
+        if (user.getDisplayName() != null)
+            txtUsername.setText(user.getDisplayName());
+        else
+            txtUsername.setText(user.getEmail());
 
-        txtUsername.setText(user.getDisplayName());
-        String photoUrl = user.getPhotoUrl().toString().replace("/s96-c/","/s720-c/");
-        Glide.with(this).load(photoUrl).into(imgUserphoto);
-        Log.d("avatar", "PhotoUrl: " + photoUrl);
+        if (user.getPhotoUrl() != null) {
+            String photoUrl = user.getPhotoUrl().toString().replace("/s96-c/", "/s720-c/");
+            Glide.with(this).load(photoUrl).into(imgUserphoto);
+        }
         txtLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

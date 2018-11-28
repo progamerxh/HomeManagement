@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutScenario"
     android:layout_width="match_parent"
@@ -7,12 +8,24 @@
     android:background="@color/dark_grey"
     tools:context=".Activity.ScenarioActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <FrameLayout
             android:id="@+id/roomFrame"
@@ -21,10 +34,11 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/imgSystemPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/kitchen" />
+                android:src="@drawable/livingroom" />
 
             <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
@@ -42,8 +56,8 @@
                 </android.support.v7.widget.Toolbar>
             </android.support.design.widget.AppBarLayout>
 
-
             <TextView
+                android:id="@+id/txtGreeting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -52,11 +66,11 @@
                 android:shadowDx="2"
                 android:shadowDy="2"
                 android:shadowRadius="10"
-                android:text="Welcome home.\nKu Hiệp"
                 android:textColor="@color/text"
                 android:textSize="40sp" />
 
             <LinearLayout
+                android:id="@+id/connection_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -102,6 +116,7 @@
         </FrameLayout>
 
         <RelativeLayout
+            android:id="@+id/ScenarioNavigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
@@ -133,15 +148,47 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/createFirstSystem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginTop="40dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:background="@android:color/transparent"
+            android:text="Let's create first system"
+            android:textAllCaps="false"
+            android:textColor="@color/light_grey"
+            android:textSize="30sp"
+            android:layout_marginBottom="30dp"
+            />
+
+        <Button
+            android:id="@+id/btnGo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_outline_background"
+            android:backgroundTint="@color/light_green"
+            android:layout_gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Go"
+            android:textColor="@color/dark_grey" />
+    </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/scenario_recycleview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:padding="10dp"
-            android:visibility="gone">
-
-        </android.support.v7.widget.RecyclerView>
+            android:visibility="gone"></android.support.v7.widget.RecyclerView>
 
         <io.supercharge.shimmerlayout.ShimmerLayout
             android:id="@+id/shimmer_layout"
@@ -175,6 +222,7 @@
                     android:layout_marginLeft="10dp" />
             </LinearLayout>
         </io.supercharge.shimmerlayout.ShimmerLayout>
+
     </LinearLayout>
 
     <RelativeLayout
